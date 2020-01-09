@@ -1,6 +1,6 @@
 ---
 title: "Assignment 1: Introduction"
-author: "Student Name"
+author: "Masha Edmondson"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -22,21 +22,21 @@ The completed exercise is due on Tuesday, January 14th at 1:00 pm.
 
 1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: 
+> Answer: I have experience using MatLAB and python with my undergraduate thesis. I worked with R software class in my junior year of college; however it was 4 years ago and the R software looks completely different from today. I have done some informal training with panolpy course provided by Duke.
 
 2. Are there any components of the course about which you feel confident?
 
-> Answer: 
+> Answer: I feel confident in my ability to understand code, and look for small nuiances that might have caused an error. I feel confident in my ability to learn code.
 
 3. Are there any components of the course about which you feel apprehensive?
 
-> Answer: 
+> Answer: I am apprehensive about trouble shooting code, and computer glitches out of anyone's control because it seems to me that technology is not always kind to me. I am also slightly apprehensive about getting behind in class due to errors and spending class time catching up instead of learning.
 
 
 ## 2) GitHub
 
 Provide a link below to your forked course repository in GitHub. Make sure you have pulled all recent changes from the course repository  and that you have updated your course README file. 
 
-> Answer: 
+> Answer: https://github.com/m12edmon/Environmental_Data_Analytics_2020
 
 
