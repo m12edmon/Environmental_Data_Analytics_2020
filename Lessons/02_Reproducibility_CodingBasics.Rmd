@@ -126,14 +126,14 @@ longnameforillustration
 
 ```{r}
 long_name_for_illustration <- 11
-
+long_name_for_illustration
 ```
 
 ### Comments
 Within your R code, it is often useful to include notes about your workflow. So that these aren't interpreted by the software as code, precede the notes with a `#` sign. Your editor will display this comment as a different color to indicate it will not be run in the console. Comments can be placed on their own lines or at the end of a line of code.
 ```{r}
 # I am demonstrating a comment here. 
-
+# commenting created
 1 + 1 # This is a simple math problem
 ```
 
@@ -144,8 +144,8 @@ R functions are the major tool used in R. Functions can do virtually unlimited t
 seq(1, 10)
 ten_sequence <- seq(1, 10)
 ten_sequence
-
-seq(1, 10, 2) # from, to, by
+# spaces do not matter that much in equations so you can space as much as necessary
+seq(1, 10, 2) # from, to, by - counting by 2's
 ```
 
 The basic form of a function is `functionname()`, and the packages we will use in this class will use these basic forms. However, there may be situations when you will want to create your own function. Below is a description of how to write functions through the metaphor of creating a recipe (credit: @IsabellaGhement on Twitter). 
@@ -153,7 +153,8 @@ The basic form of a function is `functionname()`, and the packages we will use i
 Writing a function is like writing a recipe. Your function will need a recipe name (functionname). Your recipe ingredients will go inside the parentheses. The recipe steps and end product go inside the curly brackets.
 ```{r}
 functionname <- function(){
-  
+
+
 }
 ```
 
@@ -177,7 +178,7 @@ Two single ingredient recipes, baked at the same time:
 recipe2 <- function(x){
   mix1 <- x*2
   mix2 <- x/2
-  return(list(mix1 = mix1, #comma indicates we continue onto the next line
+  return(list(mix1 = mix1, #comma indicates we continue onto the next line to do two things to recipie
               mix2 = mix2))
 }
 
