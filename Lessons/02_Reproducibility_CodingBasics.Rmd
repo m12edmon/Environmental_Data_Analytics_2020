@@ -248,7 +248,7 @@ For now, here are some ways to access the help tools in R:
 
 ```{r}
 ??seq
-```
+``` #when you need help
 
 
 ## Tips and Tricks
