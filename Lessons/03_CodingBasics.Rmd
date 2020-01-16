@@ -36,66 +36,72 @@ vector2
 vector3 <- c(TRUE,TRUE,TRUE,FALSE,TRUE,FALSE) #logical vector
 vector3
 
-vector1[3] # 
+vector1[3] # this causes the statement of numeric vector in vector to call up a specific item in square brackets... specifically the third item, and it outputs the number
 
-# Matrices ----
-matrix1 <- matrix(1:20, nrow = 5,ncol = 4) # 
+# Matrices ---- creating a matrix that has two dimensions
+matrix1 <- matrix(1:20, nrow = 5,ncol = 4) # matrix is a function in R with numbers from 1-20 in order in each colum
 matrix1
-matrix2 <- matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE) #
+matrix2 <- matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE) # this places the numbers in order numerically across a row and not column, and "Byrow = true" shows this population by row
 matrix2
 matrix3 <- matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE, # return after comma continues the line
                   dimnames = list(c("uno", "dos", "tres", "cuatro", "cinco"), 
                                   c("un", "deux", "trois", "cat"))) #
+matrix3 # labled the columns and rows with names using the "dimnames" code
+matrix1[4, ] # in Matrix one it is calling up row 4
+matrix1[ , 3] # in matrix 1 it is calling up column 3 numbers
+matrix1[c(12, 14)] # just grabbed where the numbers within the matrix - specificing columns 
+matrix1[c(12:14)] # brought up numbers 12-14
+matrix1[2:4, 1:3] # called up rows 2-4 and columns 1-3 and their respective numbers
 
-matrix1[4, ] #
-matrix1[ , 3] #
-matrix1[c(12, 14)] #
-matrix1[c(12:14)] #
-matrix1[2:4, 1:3] #
-
-cells <- c(1, 26, 24, 68)
-rnames <- c("R1", "R2")
-cnames <- c("C1", "C2") 
+cells <- c(1, 26, 24, 68) #creating a vector of cells
+rnames <- c("R1", "R2") #create another character vector for rows
+cnames <- c("C1", "C2") # create another character vector for columns
 matrix4 <- matrix(cells, nrow = 2, ncol = 2, byrow = TRUE,
-  dimnames = list(rnames, cnames)) # 
+  dimnames = list(rnames, cnames)) # this tells R how to create this matrix 2x2 byrows left to right and specificy the "dimnames
 matrix4
 
 # Lists ---- 
-list1 <- list(name = "Maria", mynumbers = vector1, mymatrix = matrix1, age = 5.3); list1
-list1[[2]]
+list1 <- list(name = "Maria", mynumbers = vector1, mymatrix = matrix1, age = 5.3); list1 #creating a list with a list fuction with a name called Maria, it has a character vector called my numbers, and show the name, : this allows you to do two tasks and only show one answer. this can be useful for multiple different types and sizes of information like a medical record
+list1[[2]] #
 
-# Data Frames ----
-d <- c(1, 2, 3, 4) # What type of vector?
-e <- c("red", "white", "red", NA) # What type of vector?
-f <- c(TRUE, TRUE, TRUE, FALSE) # What type of vector?
-dataframe1 <- data.frame(d,e,f) #
-names(dataframe1) <- c("ID","Color","Passed"); View(dataframe1) # 
+# Data Frames ---- #each column has a different character and building a datafram from start to finish
+d <- c(1, 2, 3, 4) # What type of vector? numeric
+e <- c("red", "white", "red", NA) # What type of vector? character
+f <- c(TRUE, TRUE, TRUE, FALSE) # What type of vector? logical
+dataframe1 <- data.frame(d,e,f) # want data included -creates a frame
+names(dataframe1) <- c("ID","Color","Passed"); View(dataframe1) # giving rows and columns names
 
-dataframe1[1:2,] # 
-dataframe1[c("ID","Passed")] # 
-dataframe1$ID
+dataframe1[1:2,] # subsetting within dataframe shows rows and only rows you called[rows, column]
+dataframe1[c("ID","Passed")] # calls up just the columns within the ID and Passed
+dataframe1$ID #datafram calls up IDs column, and $ indicates calling up a specific portion
 
 ```
 Question: How do the different types of data appear in the Environment tab?
 
-> Answer: 
+> Answer: Within the environment tab creating matrixies and dataframs show our data and what we are asking it to do, and well as what we assigned it to do within the matrix or dataset. If you clicked the pull down button or on the function it will create a new tab and show an actual chart of your data.
 
 Question: In the R chunk below, write "dataframe1$". Press `tab` after you type the dollar sign. What happens?
 
-> Answer: 
+> Answer: Hitting tab picks the first item in your columns list and then calls up all of the data into the column.
 
 ### Coding challenge
 
 Find a ten-day forecast of temperatures (Fahrenheit) for Durham, North Carolina. Create two vectors, one representing the high temperature on each of the ten days and one representing the low.
 
 ```{r}
-
+vector4 <- c(62, 45, 50, 50, 40, 40, 45, 52, 54, 58) 
+vector4
+vector5 <- c(31, 29, 43, 24, 23, 23, 26, 30, 42, 41)
+vector5
 ```
 
 Now, create two additional vectors that include the ten-day forecast for the high and low temperatures in Celsius.
 
 ```{r}
-
+vector4 <- c(62, 45, 50, 50, 40, 40, 45, 52, 54, 58) 
+vector4-
+vector5 <- c(31, 29, 43, 24, 23, 23, 26, 30, 42, 41)
+vector5/32
 ```
 
 Combine your four vectors into a data frame and add informative column names.
@@ -130,21 +136,21 @@ If a package is already installed, you will need to load it every session. You c
 
 ```{r}
 # We will use the packages dplyr and ggplot2 regularly. 
-#install.packages("dplyr") 
-#install.packages("ggplot2")
+install.packages("dplyr") 
+install.packages("ggplot2")
 # comment out install commands, use only when needed and re-comment
 
 library(dplyr)
 library(ggplot2)
 
 # Some packages are umbrellas under which other packages are loaded
-#install.packages("tidyverse")
+install.packages("tidyverse")
 library(tidyverse)
 ```
 
 Question: What happens in the console when you load a package?
 
-> Answer: 
+> Answer: It shows what packages you have, and library helps load in packages and keep them updated, and in conflicts tells you that these functions are doing something else
 
 
 ## Tips and Tricks
