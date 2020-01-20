@@ -32,12 +32,17 @@ The completed exercise is due on Tuesday, January 21 at 1:00 pm.
 4. Insert comments in your code to describe what you are doing.
 
 ```{r}
-#1. my_sequence <- seq(0, 100, by = 4)
+#1. 
+   my_sequence <- seq(0, 100, by = 4) 
+#naming the sequence "my sequence" and using the sequence function to create a sequence of numbers from one to 100 increasing by fours.
 
-#2. mean(my_sequence)
-    #median(my_sequence)
+#2. 
+   mean(my_sequence)  #finding the mean of the sequence through the mean function
+   median(my_sequence) #finding the median of the sequence through the median function
 
-#3. mean(my_sequence) > median(my_sequence) 
+#3. 
+   mean(my_sequence) > median(my_sequence) 
+   #asking a logical statement if the mean of the sequence is greater than the median of the sequence
 
 ```
 
@@ -53,10 +58,13 @@ The completed exercise is due on Tuesday, January 21 at 1:00 pm.
 
 ```{r}
 students <- c("Abby Brown", "Joe Fields", "Eddie Cook", "Fran Johnson") #creating a character vector with student names
-test_scores <- c(100, 82, 75, 43) #creating a numeric vector with student test scores
-passed <- test_scores >= 50 #creating a logical vector showing which students passed the exam with a score of 50 or higher
 
-test_results <- data.frame(students, test_scores, passed) #combining vectors into a dataframe with name
+test_scores <- c(100, 82, 75, 43) #creating a numeric vector with each student's test scores
+
+passed <- test_scores >= 50 #creating a logical vector showing which students passed the exam with a score of 50 or higher, and which students faile with a score lower than 50.
+
+test_results <- data.frame(students, test_scores, passed) #combining vectors into a dataframe and naming the dataframe
+
 names(test_results) <- c("Student","Test Score","Passed Exam"); View(test_results) #labeling the columns and viewing the data frame created
 ```
 
@@ -69,9 +77,15 @@ names(test_results) <- c("Student","Test Score","Passed Exam"); View(test_result
 11. Apply your function to the vector with test scores that you created in number 5. 
 
 ```{r}
+test_scores <- c(100, 82, 75, 43) 
+for (value in test_scores){print(value)}
+for (value in test_scores){
+  if (test_scores >= 50){print("Passed Exam")} else {print("Failed Exam")} #tried to create and "if" and "else" statement function for the test score results, which did not end up working.
 
+test_results2 <- ifelse(test_scores >= 50, "passed exam", "failed exam") #created "ifelse" function to determine who passed and who failed the exam given the condition of passing to be a grade of 50 points or higher
+test_results2 #named the outcome of ifelse function
 ```
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer: 
+> Answer: When I tried to use the "if" and "else" statement function the code failed to run because the condition has a length that was greater than 1 and only the first element was used- the first test score. This failed because we were trying to use a vector on the function when the if, else statement would only give you a response to one element and not each of the test scores. The "ifelse" function worked because the "ifsele" function returns a value with the same shape as test, an object which can be coerced to logical mode, which is filled with elements selected from either yes (retun value for true elements) or no (return values for false elements) depending on whether the element of test is true or false. This function was able to take our vector data with four elements and produce a logical statement for each of the four elements to determine which students passed or failed the exam.
