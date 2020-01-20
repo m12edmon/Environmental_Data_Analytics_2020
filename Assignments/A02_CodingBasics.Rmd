@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2: Coding Basics"
-author: "Student Name"
+author: "Masha Edmondson"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -32,11 +32,12 @@ The completed exercise is due on Tuesday, January 21 at 1:00 pm.
 4. Insert comments in your code to describe what you are doing.
 
 ```{r}
-#1. 
+#1. my_sequence <- seq(0, 100, by = 4)
 
-#2. 
+#2. mean(my_sequence)
+    #median(my_sequence)
 
-#3. 
+#3. mean(my_sequence) > median(my_sequence) 
 
 ```
 
@@ -51,7 +52,12 @@ The completed exercise is due on Tuesday, January 21 at 1:00 pm.
 8. Label the columns of your data frame with informative titles.
 
 ```{r}
+students <- c("Abby Brown", "Joe Fields", "Eddie Cook", "Fran Johnson") #creating a character vector with student names
+test_scores <- c(100, 82, 75, 43) #creating a numeric vector with student test scores
+passed <- test_scores >= 50 #creating a logical vector showing which students passed the exam with a score of 50 or higher
 
+test_results <- data.frame(students, test_scores, passed) #combining vectors into a dataframe with name
+names(test_results) <- c("Student","Test Score","Passed Exam"); View(test_results) #labeling the columns and viewing the data frame created
 ```
 
 9. QUESTION: How is this data frame different from a matrix?
