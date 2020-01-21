@@ -77,10 +77,11 @@ names(test_results) <- c("Student","Test Score","Passed Exam"); View(test_result
 11. Apply your function to the vector with test scores that you created in number 5. 
 
 ```{r}
-test_scores <- c(100, 82, 75, 43) 
-for (value in test_scores){print(value)}
-for (value in test_scores){
-  if (test_scores >= 50){print("Passed Exam")} else {print("Failed Exam")} #tried to create and "if" and "else" statement function for the test score results, which did not end up working.
+#test_scores <- c(100, 82, 75, 43) 
+#for (value in test_scores){print(value)}
+#for (value in test_scores){
+  #if (test_scores >= 50){print("Passed Exam")} else {print("Failed Exam")} 
+#tried to create and "if" and "else" statement function for the test score results, which did not end up working.
 
 test_results2 <- ifelse(test_scores >= 50, "passed exam", "failed exam") #created "ifelse" function to determine who passed and who failed the exam given the condition of passing to be a grade of 50 points or higher
 test_results2 #named the outcome of ifelse function
