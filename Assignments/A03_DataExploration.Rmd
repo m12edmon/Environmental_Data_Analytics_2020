@@ -30,8 +30,9 @@ getwd()
 library(tidyverse)
 
 #Import datasets
-Neonics.data <- read.csv("/Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv")
-Litter.data <- read.csv("/Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
+Neonics.data <- read.csv("../Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv")
+Litter.data <- read.csv("../Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
+
 
 ```
 
@@ -59,31 +60,40 @@ Litter.data <- read.csv("/Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
 5. What are the dimensions of the dataset?
 
 ```{r}
-
+dim(Neonics.data) # rows: 4623 columns: 30
 ```
 
 6. Using the `summary` function, determine the most common effects that are studied. Why might these effects specifically be of interest?
 ```{r}
+summary(Neonics.data)
+summary(Neonics.data$Effect)
+summary(Neonics.data$Effect.Measurement)
 
 ```
 
-> Answer: 
+> Answer: Abundance has 1699 and Mortality 1294
 
 7. Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.
 
 ```{r}
-
+summary(Neonics.data$Species.Common.Name)
 ```
 
-> Answer: 
+> Answer:Honey Bee                     Parasitic Wasp 
+                               667                                285 
+             Buff Tailed Bumblebee                Carniolan Honey Bee 
+                               183                                152 
+                        Bumble Bee                   Italian Honeybee 
+                               140                                113 
+
 
 8. Concentrations are always a numeric value. What is the class of Conc.1..Author. in the dataset, and why is it not numeric?
 
 ```{r}
-
+class(Neonics.data$Conc.1..Author.)
 ```
 
-> Answer:
+> Answer:factor. It is not numeric because it is missing some numerical values in the columns
 
 
 
@@ -91,49 +101,67 @@ Litter.data <- read.csv("/Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
 
 9. Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year. 
 ```{r}
+ggplot(Neonics.data)+
+geom_freqpoly(aes(x = Publication.Year))
 
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 ```{r}
+ggplot(Neonics.data)+
+geom_freqpoly(aes(x = Publication.Year, color=Test.Location))
 
 ```
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer: 
+> Answer: The Lab is the most common test location
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
 ```{r}
+ggplot(Neonics.data, aes(x = Endpoint)) +
+  geom_bar()
+summary(Neonics.data$Endpoint)
 
 ```
 
-> Answer: 
+> Answer: NOEL endpoint has 1816, LOEL 1664
 >
 
 ## Explore your data (Litter)
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018. 
 ```{r}
+class(Litter.data$collectDate) #factor
+Litter.data$collectDate <- as.Date(Litter.data$collectDate, format = "%Y-%m-%d") 
+class(Litter.data$collectDate)
 
 ```
 
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
 ```{r}
-
+unique(Litter.data$plotID)
 ```
 
-> Answer: 
+> Answer: 12 different plots
 
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 ```{r}
+ggplot(Litter.data, aes(x = functionalGroup)) +
+  geom_bar()
+summary(Litter.data$functionalGroup)
 
 ```
 
 15. Using `geom_boxplot` and `geom_violin`, create a boxplot and a violin plot of dryMass by functionalGroup. 
 ```{r}
+ggplot(Litter.data) +
+  geom_boxplot(aes(x = functionalGroup, y = dryMass)) #box plot
+
+ggplot(Litter.data) +
+  geom_violin(aes(x = functionalGroup, y = dryMass)) #violin plot
 
 ```
 
