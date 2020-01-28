@@ -40,20 +40,19 @@ Litter.data <- read.csv("../Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
 
 2. The neonicotinoid dataset was collected from the Environmental Protection Agency's ECOTOX Knowledgebase, a database for ecotoxicology research. Neonicotinoids are a class of insecticides used widely in agriculture. The dataset that has been pulled includes all studies published on insects. Why might we be interested in the ecotoxicologoy of neonicotinoids on insects? Feel free to do a brief internet search if you feel you need more background information. 
 
-> Answer: 
+> Answer: Neonicotinoid is a common inseciticide used in agirculture that resembles nicotine. There has been research that shows neonicotinoid insecticide is linked to declining bee populations. Therefore, it is important to know what types of insects are located in agricultural areas that use this inseciticide. There have not been an abundance of long term studies on the impacts of neonicotinoids on local insect populations, which is important to know. Some insects  provide necessary pollination of crops, which could be adversly affected by the inseciticide. It would also be helpful to know what insects are in the areas, and if there are any drastic declines in the populations that could be linked to the use of Neonicotinoids.
 
 3. The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information. 
 
-> Answer: 
+> Answer: Litter is an important factor in ecosystem dynamics, as it is indicative of ecological productivity and may be useful in predicting regional nutrient cycling and soil fertility. This detritus organic material and its constituent nutrients can be absorbed into the top layer of soil. The amount of litter can also inform us about the primary production of forests. It could also indicates areas that could be more susceptible to fires. Litterfall and fine woody debris data may be used to esimate annual Aboveground Net Primary Productivity (ANPP) and aboveground biomass at plot, site, and conƟnental scales. They also provide essential data for understanding vegetative carbon fluxes over time.
 
 4. How is litter and woody debris sampled as part of the NEON network? Read the NEON_Litterfall_UserGuide.pdf document to learn more. List three pieces of salient information about the sampling methods here: 
 
-> Answer: 
-*
-*
-*
-
-
+> Answer: Litter is defined as material that is dropped from the forest canopy and has a butt end diameter <2cm and a length <50 cm. This material is collected in elevated 0.5m2 PVC traps. Fine woody debris is defined as material that is dropped from the forest canopy and has a butt end diameter <2cm and a length >50 cm. This material is collected in ground traps or elevated PVC litter traps. Litter and fine woody debris sampling is executed at terrestrial NEON sites that contain woody vegetaƟon >2m tall. The litter sampling is targeted to take place in 40m x 40m plots that range in amounts from 4-20 samples. One litter trap pair is deployed for every 400 m2 plot area. Trap placement within plots may be either targeted or randomized, depending on the vegetation. The NEON network has specific protocols that must be adhered to in order to correctly sample litter fall given different areas and climates. Three pieces of salient information about the sampling methods are: 
+* Defining litter to be a material that is dropped from the forest canopy and has a butt end diameter
+<2cm and a length <50 cm.
+* Larger rectangular ground traps may be more appropriate to collect litterfall samples that are specifically 3 m x 0.5 m rectangular area.
+*Litter and fine woody debris sampling is executed at terrestrial NEON sites that contain woody vegetation >2m tall.
 
 ## Obtain basic summaries of your data (Neonics)
 
@@ -71,7 +70,7 @@ summary(Neonics.data$Effect.Measurement)
 
 ```
 
-> Answer: Abundance has 1699 and Mortality 1294
+> Answer: The most common effects that are studied in this dataset are abundance and mortality. The summary reveals 1699 abundance and 1294 mortality recorded. In a study that is researching the impacts of the incesticide on insects, it is important to know abundance estimations and also noted mortalities. This could help determine what effect Neonicotinoids have on insect populations.
 
 7. Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.
 
@@ -79,13 +78,7 @@ summary(Neonics.data$Effect.Measurement)
 summary(Neonics.data$Species.Common.Name)
 ```
 
-> Answer:Honey Bee                     Parasitic Wasp 
-                               667                                285 
-             Buff Tailed Bumblebee                Carniolan Honey Bee 
-                               183                                152 
-                        Bumble Bee                   Italian Honeybee 
-                               140                                113 
-
+> Answer: The six most commonly studied insects are Honey Bees (667 reports), Parasitic Wasp (285 reports), Buff Tailed Bumblebees (183 reports), the Carniolan Honey Bee (152 reports), Bumble bee (140 reports), and the Italian Honeybee (113 reports). These species are all types of bees and pollinators that play an important role in every aspect of the ecosystem. They support the growth of trees, flowers, and other plants, which serve as food and shelter for other organisms. Bees contribute to complex, interconnected ecosystems that allow a diverse number of different species to co-exist. The are responsible for pollianting and distrubting plants that aids biodiveristy and productivity. Parasitic wasps are increasingly used in agricultural pest control as they themselves do little or no damage to crops. Farmers buy these parasitic wasps for insect control in their fields. Not only are parasitic wasps  important for pest control, but they are also necessary as pollinators in agriculture and home gardens.
 
 8. Concentrations are always a numeric value. What is the class of Conc.1..Author. in the dataset, and why is it not numeric?
 
@@ -93,8 +86,7 @@ summary(Neonics.data$Species.Common.Name)
 class(Neonics.data$Conc.1..Author.)
 ```
 
-> Answer:factor. It is not numeric because it is missing some numerical values in the columns
-
+> Answer:The class of Conc.1..Author is a factor. It is not numeric classification because it is missing some numerical values in the columns or the numerica data appears to be incomplete. 
 
 
 ## Explore your data graphically (Neonics)
@@ -115,7 +107,7 @@ geom_freqpoly(aes(x = Publication.Year, color=Test.Location))
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer: The Lab is the most common test location
+> Answer: The lab appears to be the most common test location starting around early 2000s until the present. "Field natural" test location was more common beginning early 1990s, but have fluctuated since 2000s. The "artifical field" test locations were rarely used throughout the whole time spand from 1980-2020.
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
@@ -126,8 +118,8 @@ summary(Neonics.data$Endpoint)
 
 ```
 
-> Answer: NOEL endpoint has 1816, LOEL 1664
->
+> Answer: The two most common end points are NOEL and LOEL. NOEL is defined by their count, or the number of times they appeared in the dataset. NOEL had a count of 1816, and LOEL had a count of 1664.
+
 
 ## Explore your data (Litter)
 
@@ -136,7 +128,7 @@ summary(Neonics.data$Endpoint)
 class(Litter.data$collectDate) #factor
 Litter.data$collectDate <- as.Date(Litter.data$collectDate, format = "%Y-%m-%d") 
 class(Litter.data$collectDate)
-
+#Litter was collected August 2nd and August 30th in 2018
 ```
 
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
@@ -145,7 +137,7 @@ class(Litter.data$collectDate)
 unique(Litter.data$plotID)
 ```
 
-> Answer: 12 different plots
+> Answer: 12 different plots were sampled at Niwot Ridge. The information obtained from the "unique" function eliminates duplicate elements/rows from a vector, data frame or array. The summary function produces a summary of all records in the found in the dataset which can include duplicates.
 
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 ```{r}
@@ -167,8 +159,8 @@ ggplot(Litter.data) +
 
 Why is the boxplot a more effective visualization option than the violin plot in this case?
 
-> Answer: 
+> Answer: The boxplot is a more effective visualization option than the violin plot becuase it better visualizes the data provided. It illustrates the the interquartile range, median, variabilities, and statistical outliers clearly. It also provides some indication of the data's symmetry and skewness. The violin plot, which displays density distributions, illustrated very little for the data provided. It could not clearly show information about sample counts, medians, interquartile ranges, and lower/upper values. It makes the data appear incomplete.
 
 What type(s) of litter tend to have the highest biomass at these sites? 
 
-> Answer: 
+> Answer: Needles and woody material litter tend to have the highest biomass at these sites.
