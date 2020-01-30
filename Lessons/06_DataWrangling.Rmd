@@ -181,7 +181,7 @@ Let's say we want to take our raw dataset (NTL.phys.data), *then* filter the dat
 
 ```{r}
 NTL.phys.data.processed <- 
-  NTL.phys.data %>%
+  NTL.phys.data %>% #selecting data for a pipe, the pipe function means "then" and filtering for lakes then select certain columns then mutate the columns with a new column to create a temp in ferienheight
   filter(lakename == "Paul Lake" | lakename == "Peter Lake") %>%
   select(lakename, sampledate:temperature_C) %>%
   mutate(temperature_F = (temperature_C*9/5) + 32)
@@ -193,7 +193,8 @@ Notice that we did not place the dataset name inside the wrangling function but 
 ### Saving processed datasets
 
 ```{r}
-write.csv(NTL.phys.data.PeterPaul1, row.names = FALSE, file = "./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv")
+write.csv(NTL.phys.data.PeterPaul1, row.names = FALSE, file = "./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv") #most of the time kateri will save processed data
+
 ```
 
 ## Closing Discussion
