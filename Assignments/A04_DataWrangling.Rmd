@@ -1,6 +1,6 @@
 ---
 title: "Assignment 4: Data Wrangling"
-author: "Student Name"
+author: "Masha Edmondson"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -21,12 +21,21 @@ The completed exercise is due on Tuesday, February 4 at 1:00 pm.
 ## Set up your session 
 1. Check your working directory, load the `tidyverse` and `lubridate` packages, and upload all four raw data files associated with the EPA Air dataset. See the README file for the EPA air datasets for more information (especially if you have not worked with air quality data previously). 
 
+```{r, message = FALSE}
+# 1. Set up your working directory
+getwd()
+
+# 2. Load packges
+library(tidyverse)
+install.packages(lubridate)
+library(lubridate)
+
+```
 2. Explore the dimensions, column names, and structure of the datasets. 
 
 ```{r, message = FALSE}
-#1
 
-#2
+
 ```
 
 ## Wrangle individual datasets to create processed files.
