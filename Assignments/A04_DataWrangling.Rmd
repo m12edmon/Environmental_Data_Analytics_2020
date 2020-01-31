@@ -30,12 +30,38 @@ library(tidyverse)
 install.packages(lubridate)
 library(lubridate)
 
+# 3. Import datasets
+EPAair_O3_NC2018 <- read.csv("../Data/Raw/EPAair_O3_NC2018_raw.csv")
+EPAair_O3_NC2019 <- read.csv("../Data/Raw/EPAair_O3_NC2019_raw.csv")
+EPAair_PM25_NC2018 <- read.csv("../Data/Raw/EPAair_PM25_NC2018_raw.csv")
+EPAair_PM25_NC2019 <- read.csv("../Data/Raw/EPAair_PM25_NC2019_raw.csv")
 ```
 2. Explore the dimensions, column names, and structure of the datasets. 
 
 ```{r, message = FALSE}
+colnames(EPAair_O3_NC2018)
+dim(EPAair_O3_NC2018)
+str(EPAair_O3_NC2018)
+summary(EPAair_O3_NC2018)
+class(EPAair_O3_NC2018)
 
+colnames(EPAair_O3_NC2019)
+dim(EPAair_O3_NC2019)
+str(EPAair_O3_NC2019)
+summary(EPAair_O3_NC2019)
+class(EPAair_O3_NC2019)
 
+colnames(EPAair_PM25_NC2018)
+dim(EPAair_PM25_NC2018)
+str(EPAair_PM25_NC2018)
+summary(EPAair_PM25_NC2018)
+class(EPAair_PM25_NC2018)
+
+colnames(EPAair_PM25_NC2019)
+dim(EPAair_PM25_NC2019)
+str(EPAair_PM25_NC2019)
+summary(EPAair_PM25_NC2019)
+class(EPAair_PM25_NC2019)
 ```
 
 ## Wrangle individual datasets to create processed files.
