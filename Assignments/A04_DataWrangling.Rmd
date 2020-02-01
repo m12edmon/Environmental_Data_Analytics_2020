@@ -71,14 +71,46 @@ class(EPAair_PM25_NC2019)
 6. Save all four processed datasets in the Processed folder. Use the same file names as the raw files but replace "raw" with "processed".
 
 ```{r}
-#3
+#3?????????????????????? and did I select #4 properly as the way it should be graded
 
 #4
+EPAair_O3_NC2018.processed <- 
+  EPAair_O3_NC2018 %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE:SITE_LONGITUDE)
+
+EPAair_O3_NC2019.processed <- 
+  EPAair_O3_NC2019 %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE:SITE_LONGITUDE)
+
+EPAair_PM25_NC2018.processed <- 
+  EPAair_PM25_NC2018 %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE:SITE_LONGITUDE) 
+
+EPAair_PM25_NC2019.processed <- 
+  EPAair_PM25_NC2019 %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE:SITE_LONGITUDE)
 
 #5
+levels(EPAair_PM25_NC2018.processed$AQS_PARAMETER_DESC)[levels(EPAair_PM25_NC2018.processed$AQS_PARAMETER_DESC)=="Acceptable PM2.5 AQI & Speciation Mass"]<- "PM2.5"
+
+levels(EPAair_PM25_NC2018.processed$AQS_PARAMETER_DESC)[levels(EPAair_PM25_NC2018.processed$AQS_PARAMETER_DESC)=="PM2.5 - Local Conditions"]<- "PM2.5"
+
+levels(EPAair_PM25_NC2019.processed$AQS_PARAMETER_DESC)[levels(EPAair_PM25_NC2019.processed$AQS_PARAMETER_DESC)=="Acceptable PM2.5 AQI & Speciation Mass"]<- "PM2.5"
+
+levels(EPAair_PM25_NC2019.processed$AQS_PARAMETER_DESC)[levels(EPAair_PM25_NC2019.processed$AQS_PARAMETER_DESC)=="PM2.5 - Local Conditions"]<- "PM2.5"
 
 #6
+write.csv(EPAair_O3_NC2018.processed, row.names = FALSE, 
+          file = "../Data/Processed/EPAair_O3_NC2018_Processed.csv")
 
+write.csv(EPAair_O3_NC2019.processed, row.names = FALSE, 
+          file = "../Data/Processed/EPAair_O3_NC2019_Processed.csv")
+
+write.csv(EPAair_PM25_NC2018.processed, row.names = FALSE, 
+          file = "../Data/Processed/EPAair_PM25_NC2018.Processed.csv")
+
+write.csv(EPAair_PM25_NC2019.processed, row.names = FALSE, 
+          file = "../Data/Processed/EPAair_PM25_NC2019.Processed.csv")
 ```
 
 
@@ -97,15 +129,31 @@ class(EPAair_PM25_NC2019)
 
 ```{r}
 #7
+EPAair_O3_PM25_NC <- rbind(EPAair_O3_NC2018.processed, EPAair_O3_NC2019.processed, EPAair_PM25_NC2018.processed, EPAair_PM25_NC2019.processed)
 
 #8
+EPAair_O3_PM25_NC1718 <- 
+  EPAair_O3_PM25_NC %>%
+  filter("Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School")%>%
+  group_by(date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
+  summarise(mean_AQI_value = mean(DAILY_AQI_VALUE), 
+            meanLat = mean(SITE_LATITUDE), 
+            meanLong = mean(SITE_LONGITUDE))
+
+EPAair_O3_PM25_NC1718.dates <- mutate(EPAair_O3_PM25_NC1718, Month = month(Date))
+EPAair_O3_PM25_NC1718.dates <- mutate(EPAair_O3_PM25_NC1718, Year = year(Date))
+EPAair_O3_PM25_NC1718.dates <- select(EPAair_O3_PM25_NC1718, date, month, year, DAILY_AQI_VALUE:SITE_LONGITUDE)
+dim(EPAair_O3_PM25_NC1718.dates)     
+dim(EPAair_O3_PM25_NC1718)     
 
 #9
+EPAair_O3_PM25_NC1718.spread <- spread(EPAair_O3_PM25_NC1718, Ozone, PM2.5, DAILY_AQI_VALUE)
 
 #10
-
+dim(EPAair_O3_PM25_NC1718.spread)
 #11
-
+write.csv(EPAair_O3_PM25_NC1718.spread, row.names = FALSE, 
+          file = "../Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
 ```
 
 
@@ -120,7 +168,7 @@ class(EPAair_PM25_NC2019)
 #12b
 
 #13
-
+dim()
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
