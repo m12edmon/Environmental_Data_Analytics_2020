@@ -130,21 +130,20 @@ write.csv(EPAair_PM25_NC2019.processed, row.names = FALSE,
 ```{r}
 #7
 EPAair_O3_PM25_NC <- rbind(EPAair_O3_NC2018.processed, EPAair_O3_NC2019.processed, EPAair_PM25_NC2018.processed, EPAair_PM25_NC2019.processed)
+dim(EPAair_O3_PM25_NC)
 
 #8
 EPAair_O3_PM25_NC1718 <- 
   EPAair_O3_PM25_NC %>%
-  filter("Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School")%>%
-  group_by(date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
+  filter(Site.Name == "Linville Falls"| Site.Name == "Durham Armory"|Site.Name =="Leggett"| Site.Name == "Hattie Avenue"| Site.Name == "Clemmons Middle" | Site.Name == "Mendenhall School" | Site.Name == "Frying Pan Mountain"| Site.Name == "West Johnston Co."| Site.Name ==  "Garinger High School"| Site.Name ==  "Castle Hayne"| Site.Name ==  "Pitt Agri. Center"|Site.Name ==  "Bryson City"| Site.Name == "Millbrook School")%>%
+  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
   summarise(mean_AQI_value = mean(DAILY_AQI_VALUE), 
             meanLat = mean(SITE_LATITUDE), 
-            meanLong = mean(SITE_LONGITUDE))
+            meanLong = mean(SITE_LONGITUDE)) %>%
+  mutate(month = month(Date))%>%
+  mutate(year= year(Date))
 
-EPAair_O3_PM25_NC1718.dates <- mutate(EPAair_O3_PM25_NC1718, Month = month(Date))
-EPAair_O3_PM25_NC1718.dates <- mutate(EPAair_O3_PM25_NC1718, Year = year(Date))
-EPAair_O3_PM25_NC1718.dates <- select(EPAair_O3_PM25_NC1718, date, month, year, DAILY_AQI_VALUE:SITE_LONGITUDE)
-dim(EPAair_O3_PM25_NC1718.dates)     
-dim(EPAair_O3_PM25_NC1718)     
+dim(EPAair_O3_PM25_NC1718)
 
 #9
 EPAair_O3_PM25_NC1718.spread <- spread(EPAair_O3_PM25_NC1718, Ozone, PM2.5, DAILY_AQI_VALUE)
