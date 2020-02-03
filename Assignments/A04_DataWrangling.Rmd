@@ -2,8 +2,10 @@
 title: 'Assignment 4: Data Wrangling'
 author: "Masha Edmondson"
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
+  html_document:
+    df_print: paged
 geometry: margin=2.54cm
 ---
 
@@ -29,14 +31,15 @@ getwd()
 
 # 2. Load packges
 library(tidyverse)
-install.packages(lubridate)
+#install.packages(lubridate)
 library(lubridate)
 
 # 3. Import datasets
-EPAair_O3_NC2018 <- read.csv("../Data/Raw/EPAair_O3_NC2018_raw.csv")
-EPAair_O3_NC2019 <- read.csv("../Data/Raw/EPAair_O3_NC2019_raw.csv")
-EPAair_PM25_NC2018 <- read.csv("../Data/Raw/EPAair_PM25_NC2018_raw.csv")
-EPAair_PM25_NC2019 <- read.csv("../Data/Raw/EPAair_PM25_NC2019_raw.csv")
+EPAair_O3_NC2018 <- read.csv("./Data/Raw/EPAair_O3_NC2018_raw.csv")
+EPAair_O3_NC2019 <- read.csv("./Data/Raw/EPAair_O3_NC2019_raw.csv")
+EPAair_PM25_NC2018 <- read.csv("./Data/Raw/EPAair_PM25_NC2018_raw.csv")
+EPAair_PM25_NC2019 <- read.csv("./Data/Raw/EPAair_PM25_NC2019_raw.csv")
+
 ```
 2. Explore the dimensions, column names, and structure of the datasets. 
 
@@ -107,16 +110,16 @@ levels(EPAair_PM25_NC2019.processed$AQS_PARAMETER_DESC)[levels(EPAair_PM25_NC201
 
 #6
 write.csv(EPAair_O3_NC2018.processed, row.names = FALSE, 
-          file = "../Data/Processed/EPAair_O3_NC2018_Processed.csv")
+          file = "./Data/Processed/EPAair_O3_NC2018_Processed.csv")
 
 write.csv(EPAair_O3_NC2019.processed, row.names = FALSE, 
-          file = "../Data/Processed/EPAair_O3_NC2019_Processed.csv")
+          file = "./Data/Processed/EPAair_O3_NC2019_Processed.csv")
 
 write.csv(EPAair_PM25_NC2018.processed, row.names = FALSE, 
-          file = "../Data/Processed/EPAair_PM25_NC2018.Processed.csv")
+          file = "./Data/Processed/EPAair_PM25_NC2018.Processed.csv")
 
 write.csv(EPAair_PM25_NC2019.processed, row.names = FALSE, 
-          file = "../Data/Processed/EPAair_PM25_NC2019.Processed.csv")
+          file = "./Data/Processed/EPAair_PM25_NC2019.Processed.csv")
 ```
 
 
@@ -159,7 +162,7 @@ dim(EPAair_O3_PM25_NC1718.spread)
 
 #11
 write.csv(EPAair_O3_PM25_NC1718.spread, row.names = FALSE, 
-          file = "../Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
+          file = "./Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
 ```
 
 
