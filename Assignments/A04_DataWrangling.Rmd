@@ -71,7 +71,11 @@ class(EPAair_PM25_NC2019)
 6. Save all four processed datasets in the Processed folder. Use the same file names as the raw files but replace "raw" with "processed".
 
 ```{r}
-#3?????????????????????? and did I select #4 properly as the way it should be graded
+#3 
+EPAair_O3_NC2018$Date <- as.Date(EPAair_O3_NC2018$Date, format = "%m/%d/%Y")
+EPAair_O3_NC2019$Date <- as.Date(EPAair_O3_NC2019$Date, format = "%m/%d/%Y")
+EPAair_PM25_NC2018$Date <- as.Date(EPAair_PM25_NC2018$Date, format = "%m/%d/%Y")
+EPAair_PM25_NC2019$Date <- as.Date(EPAair_PM25_NC2019$Date, format = "%m/%d/%Y")
 
 #4
 EPAair_O3_NC2018.processed <- 
@@ -146,10 +150,11 @@ EPAair_O3_PM25_NC1718 <-
 dim(EPAair_O3_PM25_NC1718)
 
 #9
-EPAair_O3_PM25_NC1718.spread <- spread(EPAair_O3_PM25_NC1718, Ozone, PM2.5, DAILY_AQI_VALUE)
+EPAair_O3_PM25_NC1718.spread <- spread(EPAair_O3_PM25_NC1718, AQS_PARAMETER_DESC, mean_AQI_value)
 
 #10
 dim(EPAair_O3_PM25_NC1718.spread)
+
 #11
 write.csv(EPAair_O3_PM25_NC1718.spread, row.names = FALSE, 
           file = "../Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
@@ -163,11 +168,16 @@ write.csv(EPAair_O3_PM25_NC1718.spread, row.names = FALSE,
 
 ```{r}
 #12a
-
-#12b
-
+EPAair_O3_PM25_summary <- 
+  EPAair_O3_PM25_NC1718.spread %>%
+  group_by(Site.Name, month, year) %>%
+  summarise(mean_Ozone = mean(Ozone), 
+            mean_PM2.5 = mean(PM2.5))%>%
+  drop_na(month)%>%
+  drop_na(year)
+  
 #13
-dim()
+dim(EPAair_O3_PM25_summary)
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
