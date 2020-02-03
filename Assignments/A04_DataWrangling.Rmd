@@ -1,7 +1,9 @@
 ---
-title: "Assignment 4: Data Wrangling"
+title: 'Assignment 4: Data Wrangling'
 author: "Masha Edmondson"
-output: pdf_document
+output:
+  word_document: default
+  pdf_document: default
 geometry: margin=2.54cm
 ---
 
@@ -182,4 +184,4 @@ dim(EPAair_O3_PM25_summary)
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: 
+> Answer: The "na.omit" function returns any object with incomplete cases, but it does not remove the N/As from the dataset. The "drop_na" function allows us to remove items with missing values. We wanted to remove the instances where a month and year are not available.
