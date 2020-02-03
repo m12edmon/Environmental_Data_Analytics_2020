@@ -2,8 +2,8 @@
 title: 'Assignment 4: Data Wrangling'
 author: "Masha Edmondson"
 output:
-  pdf_document: default
   word_document: default
+  pdf_document: default
   html_document:
     df_print: paged
 geometry: margin=2.54cm
