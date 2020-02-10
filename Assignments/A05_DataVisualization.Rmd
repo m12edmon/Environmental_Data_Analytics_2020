@@ -64,25 +64,46 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 4. [NTL-LTER] Plot total phosphorus by phosphate, with separate aesthetics for Peter and Paul lakes. Add a line of best fit and color it black. Adjust your axes to hide extreme values.
 
 ```{r}
-TP_PO4_plot <- ggplot(PeterPaul.chem.nutrients) + 
-  geom_point(aes(x=tp_ug, y =po4, shape= lakename, color =lakename))+
+TP_PO4_plot <- ggplot(PeterPaul.chem.nutrients, aes(x= tp_ug, y = po4, shape= lakename, color =lakename)) + 
+  geom_point(aes(x= tp_ug, y = po4, shape= lakename, color =lakename))+
+  geom_smooth(aes(x= tp_ug, y = po4, shape= lakename, color =lakename), method = "lm", se = FALSE, color="black") +
   labs(x = expression(paste("Total Phosphorus (", mu, "g/L)")), y = expression(paste("Phosphate (", mu, "g/L)")), color= "lakename") +
-  xlim(0,150 ) + ylim(0, 50)+
-  #geom_smooth(method = lm) +
-  #geom_smooth(data=subset()
-  #geom_abline(aes(slope = 16, intercept = 0))
+  xlim(0, 150)+
+  ylim(0, 50)+
+  ggtitle(" Total Phosphorus by Phosphate in Peter and Paul Lake")
 print(TP_PO4_plot)
-
 ```
 
 
 5. [NTL-LTER] Make three separate boxplots of (a) temperature, (b) TP, and (c) TN, with month as the x axis and lake as a color aesthetic. Then, create a cowplot that combines the three graphs. Make sure that only one legend is present and that graph axes are aligned.
 
 ```{r}
-
-PeterPaul.temp.plot <-ggplot(PeterPaul.chem.nutrients) +
-  geom_point(aes(x= month, y = temperature_C, color = lakename))
+PeterPaul.temp.plot <-
+  ggplot(PeterPaul.chem.nutrients, aes(x= as.factor(month), y= temperature_C, color = lakename))+
+  geom_boxplot(varwidth = TRUE)+
+  labs(x = "Month", y = "Temperature (C)", color = "Lake Name")+
+  theme(legend.position = "top")
 print(PeterPaul.temp.plot)
+
+PeterPaul.tp.plot <-
+  ggplot(PeterPaul.chem.nutrients, aes(x= as.factor(month), y = tp_ug, color = lakename)) +
+  geom_boxplot() +
+  theme(legend.position = "none")+
+  labs(x = "Month", y = expression(paste("Total Phosphorus (", mu, "g/L)"))) +
+  scale_y_continuous(expand = c(0,0))+
+  #date_labels = "%B"
+print(PeterPaul.tp.plot)
+
+PeterPaul.tn.plot <-
+  ggplot(PeterPaul.chem.nutrients, aes(x= as.factor(month), y = tn_ug, color = lakename)) +
+  geom_boxplot() +
+  theme(legend.position = "none")+
+  labs(x = "Month", y = expression(paste("Total Nitrogen (", mu, "g/L)"))) +
+  scale_y_continuous(expand = c(0,0))+
+  #date_labels = "%B"
+print(PeterPaul.tn.plot)
+
+plot_grid(PeterPaul.temp.plot, PeterPaul.tp.plot, PeterPaul.tn.plot, nrows= 3, align = "h", rel_heights = c(1.25, 1)) 
 
 ```
 
@@ -95,9 +116,23 @@ Question: What do you observe about the variables of interest over seasons and b
 7. [Niwot Ridge] Now, plot the same plot but with NLCD classes separated into three facets rather than separated by color. 
 
 ```{r}
+#6
+Needles.data <- subset(NEON_NIWO_Litter_Processed, functionalGroup == "Needles" )
+Needles.plot <- ggplot(subset(NEON_NIWO_Litter_Processed, functionalGroup == "Needles"), aes( x = as.Date(collectDate), y = dryMass, color = nlcdClass))+
+  geom_point()+
+  labs(x= "", y = expression("Dry Mass (g)"), color= "NLCD CLASS")+
+  #scale_color_viridis(option = "magma", direction = -1, end = 0.8)+
+  theme(legend.position = "right")
+print(Needles.plot)
 
-
-
+#7
+facets.plot <-
+  ggplot(subset(NEON_NIWO_Litter_Processed, functionalGroup == "Needles"), aes(x= collectDate, y= dryMass, color= nlcdClass))+
+  labs(x= "", y= expression ("Dry Mass (g)"), color = "NLCD Class")+
+  geom_point()+
+  theme(legend.position = "right")+
+  facet_wrap(vars(nlcdClass), nrows = 3)
+print(facets.plot)
 ```
 
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
