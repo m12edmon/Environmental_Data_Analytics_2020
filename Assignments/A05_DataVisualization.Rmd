@@ -88,28 +88,26 @@ print(PeterPaul.temp.plot)
 PeterPaul.tp.plot <-
   ggplot(PeterPaul.chem.nutrients, aes(x= as.factor(month), y = tp_ug, color = lakename)) +
   geom_boxplot() +
-  theme(legend.position = "none")+
   labs(x = "Month", y = expression(paste("Total Phosphorus (", mu, "g/L)"))) +
   scale_y_continuous(expand = c(0,0))+
-  #date_labels = "%B"
+  theme(legend.position = "none")
 print(PeterPaul.tp.plot)
 
 PeterPaul.tn.plot <-
   ggplot(PeterPaul.chem.nutrients, aes(x= as.factor(month), y = tn_ug, color = lakename)) +
   geom_boxplot() +
-  theme(legend.position = "none")+
   labs(x = "Month", y = expression(paste("Total Nitrogen (", mu, "g/L)"))) +
   scale_y_continuous(expand = c(0,0))+
-  #date_labels = "%B"
+  theme(legend.position = "none")+
 print(PeterPaul.tn.plot)
 
-plot_grid(PeterPaul.temp.plot, PeterPaul.tp.plot, PeterPaul.tn.plot, nrows= 3, align = "h", rel_heights = c(1.25, 1)) 
+plot_grid(PeterPaul.temp.plot, PeterPaul.tp.plot, PeterPaul.tn.plot, nrows= 3, axis = "b", align = "v", rel_heights = c(1.25, 1,1))
 
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: 
+> Answer: Through this graphic, we can see that temperature increases during months 7 and 8, which is consistent with summer time, and both lakes follow the same seasonal temperature ranges. It also illustrates that there are more outliers with both the total nitrogen and total phosphorus data. The median is lower for Paul Lake in regards to total phosphorus, but for Peter Lake total phosphorus has a slightly higher median with a larger inter quartile range. Total nitrogen seems to be relatively consistant across the months for both lakes with concentrations and medians.  Finally, through these graphs you can see a slight correlation between total nitrogen and total phosphorus decrease in medians over the summer months.
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -117,24 +115,26 @@ Question: What do you observe about the variables of interest over seasons and b
 
 ```{r}
 #6
-Needles.data <- subset(NEON_NIWO_Litter_Processed, functionalGroup == "Needles" )
 Needles.plot <- ggplot(subset(NEON_NIWO_Litter_Processed, functionalGroup == "Needles"), aes( x = as.Date(collectDate), y = dryMass, color = nlcdClass))+
   geom_point()+
-  labs(x= "", y = expression("Dry Mass (g)"), color= "NLCD CLASS")+
+  labs(x= "Year", y = expression("Dry Mass (g)"), color= "NLCD CLASS")+
   #scale_color_viridis(option = "magma", direction = -1, end = 0.8)+
-  theme(legend.position = "right")
+  theme(legend.position = "right")+
+  ggtitle("Dry Mass (g) of Needles in Three Different Classifications of Forests")
 print(Needles.plot)
 
 #7
 facets.plot <-
   ggplot(subset(NEON_NIWO_Litter_Processed, functionalGroup == "Needles"), aes(x= collectDate, y= dryMass, color= nlcdClass))+
-  labs(x= "", y= expression ("Dry Mass (g)"), color = "NLCD Class")+
+  labs(x= "Year", y= expression ("Dry Mass (g)"), color = "NLCD Class")+
   geom_point()+
   theme(legend.position = "right")+
-  facet_wrap(vars(nlcdClass), nrows = 3)
+  facet_wrap(vars(nlcdClass))+
+  ggtitle("Dry Mass (g) of Needles in Three Different Classifications of Forests")
 print(facets.plot)
+
 ```
 
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer: 
+> Answer: I believe the facet plot is a better and more effective representation of the data becaause it clearly shows the different NLCD classes, how they relate to each other, how they relate across years, and clearly defines the range of dry mass in grams. In task six, separating the classes by color helped distinguish each individual class more; however, it leaves a confusing graphic that does not clearly define dry mass changes over the years and is hard to differentiate the class representation when dry mass is near 0 grams.
