@@ -1,9 +1,11 @@
 ---
-title: "Assignment 5: Data Visualization"
+title: 'Assignment 5: Data Visualization'
 author: "Masha Edmondson"
-output: pdf_document
 geometry: margin=2.54cm
-editor_options: 
+output:
+  pdf_document: default
+  word_document: default
+editor_options:
   chunk_output_type: console
 ---
 
@@ -36,7 +38,7 @@ library(cowplot)
 PeterPaul.chem.nutrients <- 
   read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
 PeterPaul.nutrients.gathered <-
-  read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
+  read_csv("Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
 NEON_NIWO_Litter_Processed <- read_csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 #2
@@ -44,7 +46,7 @@ PeterPaul.chem.nutrients$sampledate <- as.Date(PeterPaul.chem.nutrients$sampleda
 PeterPaul.nutrients.gathered$sampledate <- as.Date(PeterPaul.nutrients.gathered$sampledate, format = "%Y-%m-%d")
 
 class(PeterPaul.chem.nutrients$sampledate)
-class(PeterPaul.chem.nutrients.gathered$sampledate)
+class(PeterPaul.nutrients.gathered$sampledate)
 class(NEON_NIWO_Litter_Processed$collectDate)
 ```
 ## Define your theme
@@ -77,7 +79,7 @@ print(TP_PO4_plot)
 
 5. [NTL-LTER] Make three separate boxplots of (a) temperature, (b) TP, and (c) TN, with month as the x axis and lake as a color aesthetic. Then, create a cowplot that combines the three graphs. Make sure that only one legend is present and that graph axes are aligned.
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 PeterPaul.temp.plot <-
   ggplot(PeterPaul.chem.nutrients, aes(x= as.factor(month), y= temperature_C, color = lakename))+
   geom_boxplot(varwidth = TRUE)+
@@ -93,12 +95,11 @@ PeterPaul.tp.plot <-
   theme(legend.position = "none")
 print(PeterPaul.tp.plot)
 
-PeterPaul.tn.plot <-
-  ggplot(PeterPaul.chem.nutrients, aes(x= as.factor(month), y = tn_ug, color = lakename)) +
+PeterPaul.tn.plot <-ggplot(PeterPaul.chem.nutrients, aes(x= as.factor(month), y = tn_ug, color = lakename)) +
   geom_boxplot() +
   labs(x = "Month", y = expression(paste("Total Nitrogen (", mu, "g/L)"))) +
   scale_y_continuous(expand = c(0,0))+
-  theme(legend.position = "none")+
+  theme(legend.position = "none")
 print(PeterPaul.tn.plot)
 
 plot_grid(PeterPaul.temp.plot, PeterPaul.tp.plot, PeterPaul.tn.plot, nrows= 3, axis = "b", align = "v", rel_heights = c(1.25, 1,1))
@@ -117,7 +118,7 @@ Question: What do you observe about the variables of interest over seasons and b
 #6
 Needles.plot <- ggplot(subset(NEON_NIWO_Litter_Processed, functionalGroup == "Needles"), aes( x = as.Date(collectDate), y = dryMass, color = nlcdClass))+
   geom_point()+
-  labs(x= "Year", y = expression("Dry Mass (g)"), color= "NLCD CLASS")+
+  labs(x= "Year", y = expression("Dry Mass (g)"), color= "NLCD Class")+
   #scale_color_viridis(option = "magma", direction = -1, end = 0.8)+
   theme(legend.position = "right")+
   ggtitle("Dry Mass (g) of Needles in Three Different Classifications of Forests")
