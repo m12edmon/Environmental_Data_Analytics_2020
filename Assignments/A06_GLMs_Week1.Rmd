@@ -29,10 +29,16 @@ The completed exercise is due on Tuesday, February 18 at 1:00 pm.
 
 ```{r, message = FALSE}
 #1
+getwd()
+library(tidyverse)
+library(agricolae)
+library(cowplot)
 
+NTL_LTER.Nutrients <- read_csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv")
 
 #2
-
+NTL_LTER.Nutrients$sampledate <- as.Date(NTL_LTER.Nutrients$sampledate , format = "%Y-%m-%d")
+head(NTL_LTER.Nutrients)
 ```
 
 
