@@ -39,6 +39,8 @@ NTL_LTER.Nutrients <- read_csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPa
 #2
 NTL_LTER.Nutrients$sampledate <- as.Date(NTL_LTER.Nutrients$sampledate , format = "%Y-%m-%d")
 head(NTL_LTER.Nutrients)
+NTL_LTER.Nutrients$year4 <- as.numeric(NTL_LTER.Nutrients$year4)
+
 ```
 
 
@@ -46,8 +48,12 @@ head(NTL_LTER.Nutrients)
 
 3. Wrangle your dataset so that it contains only surface depths and only the years 1993-1996, inclusive. Set month as a factor.
 ```{r}
+#not keeping Peter and Paul lake? 
+Depths.Totals <- NTL_LTER.Nutrients %>%
+ filter(year4 %in% c("1993", "1994", "1995", "1996"), depth_id == "1")
 
 
+NTL_LTER.Nutrients$month <- as.factor(NTL_LTER.Nutrients$month)
 ```
 
 ## Analysis
@@ -56,19 +62,38 @@ Peter Lake was manipulated with additions of nitrogen and phosphorus over the ye
 
 4. Which application of the GLM will you use (t-test, one-way ANOVA, two-way ANOVA with main effects, or two-way ANOVA with interaction effects)? Justify your choice.
 
-> Answer: 
-
+> Answer: T-test is one predictable variable (would be good for lakes only). We would use the ANOVA GLM application. We would pick two way anova because we have two varibales. TN = lak+ month+ error  with interaction. Though the lakes might be similar one is being dumped with nutrients so the interaction might be able to determine that.
 5. Run your test for TN. Include examination of groupings and consider interaction effects, if relevant.
 
 6. Run your test for TP. Include examination of groupings and consider interaction effects, if relevant.
 
 ```{r}
 #5
+# Format as aov
+TN.anova.2way <- aov(data = Depths.Totals, tn_ug ~ month * lakename) 
+summary(TN.anova.2way) #proceede with main interaction. Only sig differenceis peter and paul lake - graph is and designate peter lake vs paul lake and peter lake is bigger because it is 384 vs 300
+
+# Format as lm
+#TN.anova.2way2 <- lm(data = Depths.Totals, tn_ug ~ month * lakename)
+#summary(TN.anova.2way2)
 
 
 #6
+# Format as aov
+TP.anova.2way <- aov(data = Depths.Totals, tp_ug ~ month * lakename) 
+summary(TP.anova.2way) #sig difference between lake name and month and we want to inperpret interaction 
 
+# Format as lm
+TP.anova.2way2 <- lm(data = Depths.Totals, tp_ug ~ month * lakename)
+summary(TP.anova.2way2)
 
+TukeyHSD(TP.anova.2way)
+
+TP_interaction.lake.month <-with(Depths.Totals, interaction(month, lakename))
+TP.interaction.anova <- aov(data = Depths.Totals, tp_ug ~ TP_interaction.lake.month)
+
+TP_interaction_groups <-HSD.test(TP.interaction.anova, "TP_interaction.lake.month", group = TRUE)
+TP_interaction_groups
 ```
 
 7. Create two plots, with TN (plot 1) or TP (plot 2) as the response variable and month and lake as the predictor variables. Hint: you may use some of the code you used for your visualization assignment. Assign groupings with letters, as determined from your tests. Adjust your axes, aesthetics, and color palettes in accordance with best data visualization practices.
