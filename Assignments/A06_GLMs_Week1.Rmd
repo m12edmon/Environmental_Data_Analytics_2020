@@ -1,6 +1,6 @@
 ---
 title: "Assignment 6: GLMs week 1 (t-test and ANOVA)"
-author: "Student Name"
+author: "Masha Edmondson"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -48,12 +48,12 @@ NTL_LTER.Nutrients$year4 <- as.numeric(NTL_LTER.Nutrients$year4)
 
 3. Wrangle your dataset so that it contains only surface depths and only the years 1993-1996, inclusive. Set month as a factor.
 ```{r}
-#not keeping Peter and Paul lake? 
 Depths.Totals <- NTL_LTER.Nutrients %>%
  filter(year4 %in% c("1993", "1994", "1995", "1996"), depth_id == "1")
 
-
 NTL_LTER.Nutrients$month <- as.factor(NTL_LTER.Nutrients$month)
+Depths.Totals$month<- as.factor(Depths.Totals$month)
+class(Depths.Totals$month)
 ```
 
 ## Analysis
@@ -62,7 +62,8 @@ Peter Lake was manipulated with additions of nitrogen and phosphorus over the ye
 
 4. Which application of the GLM will you use (t-test, one-way ANOVA, two-way ANOVA with main effects, or two-way ANOVA with interaction effects)? Justify your choice.
 
-> Answer: T-test is one predictable variable (would be good for lakes only). We would use the ANOVA GLM application. We would pick two way anova because we have two varibales. TN = lak+ month+ error  with interaction. Though the lakes might be similar one is being dumped with nutrients so the interaction might be able to determine that.
+> Answer: We would use the ANOVA GLM application to test for nitrogen and phosphorus levels between the two lakes over a three year time period. We would pick two-way anova with interaction because we have two varibales to consider: TN = Lake + month + error and TP= lake + month + error. We are are using ANOVA with interaction because we want to compare the difference in nutrient compositions between the two lakes over seasons.Though the lakes might be similar one is being dumped with nutrients, so the interaction might be able to determine that. We would not use T-test because it could only tell us one predictable variable. We would not use the one-way ANOVA because we are testing for more than one variable and we would not use the two-way ANOVA with main effects because we need to compare the interactions between the lakes.
+
 5. Run your test for TN. Include examination of groupings and consider interaction effects, if relevant.
 
 6. Run your test for TP. Include examination of groupings and consider interaction effects, if relevant.
@@ -71,12 +72,8 @@ Peter Lake was manipulated with additions of nitrogen and phosphorus over the ye
 #5
 # Format as aov
 TN.anova.2way <- aov(data = Depths.Totals, tn_ug ~ month * lakename) 
-summary(TN.anova.2way) #proceede with main interaction. Only sig differenceis peter and paul lake - graph is and designate peter lake vs paul lake and peter lake is bigger because it is 384 vs 300
-
-# Format as lm
-#TN.anova.2way2 <- lm(data = Depths.Totals, tn_ug ~ month * lakename)
-#summary(TN.anova.2way2)
-
+summary(TN.anova.2way) 
+# This summary tells us that the only significant difference is between Peter and Paul lake. Therefore, there is no need to proceede with more tests. Peter lake has the higher concentration of 384 versus Paul lake with only 300.
 
 #6
 # Format as aov
@@ -100,11 +97,39 @@ TP_interaction_groups
 
 8. Combine your plots with cowplot, with a common legend at the top and the two graphs stacked vertically. Your x axes should be formatted with the same breaks, such that you can remove the title and text of the top legend and retain just the bottom legend. 
 
-```{r}
-#7
+```{r} 
+settheme <- theme_classic(base_size = 14) + 
+  theme(axis.text = element_text(color = "black"),  
+        legend.position = "top") 
 
+theme_set(settheme)
+
+#7 - change the color so it is not the default and set a theme for the graph
+TN.anova.plot <- ggplot(Depths.Totals, aes(y = tn_ug, x = month, fill= lakename)) +
+  geom_boxplot()+
+  scale_fill_viridis_d(begin = 0.4, end = 1.0)+
+  labs(x = "Month", y = expression(paste("Total Nitrogen (", mu, "g/L)"))) +
+  ylim(0, 2100)
+print(TN.anova.plot)
+
+TP.anova.plot <- ggplot(Depths.Totals, aes(y = tp_ug, x = month, fill = lakename)) +
+  geom_boxplot()+
+  scale_fill_viridis_d(begin = 0.4, end = 1.0)+
+  labs(x = "Month", y = expression(paste("Total Phosphorus (", mu, "g/L)")))+
+  stat_summary(geom = "text", fun.y = max, vjust = -1, size = 3.5, 
+               label = c("cd", "bcd", "d", "ab", "d", "a", "d", "abc", "cd", "abcd"), 
+               show.legend= FALSE,
+               position = position_dodge2(0.6))+
+  ylim(0, 70)
+print(TP.anova.plot)
 
 #8
+plot_grid(TN.anova.plot + theme(axis.text.x = element_blank(),
+                                axis.ticks.x= element_blank(),
+                                axis.title.x = element_blank()),
+          TP.anova.plot + theme(legend.position = "none"),
+                                 align = "v", nrow = 2, ncol=1)
+
 
 ```
 
