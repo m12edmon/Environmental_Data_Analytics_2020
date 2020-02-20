@@ -45,18 +45,22 @@ Let's say we wanted to predict total nitrogen concentrations by depth and by lak
 # main effects
 TNancova.main <- lm(data = PeterPaul.chem.nutrients, tn_ug ~ lakename + depth)
 summary(TNancova.main)
+#this is telling us that slope (even if they have different axis) is the same. At paul lake at 0 meters of depth has intercept of 284.437. Peter lake is sig different 284+66= 350 intercept. For each meter we go in depth TN will increase by 68 micro litters.
+
 
 # interaction effects
 TNancova.interaction <- lm(data = PeterPaul.chem.nutrients, tn_ug ~ lakename * depth)
 summary(TNancova.interaction)
-
+#this is terlling us we might have different intercepts and different slopes for each lake
 TNplot <- ggplot(PeterPaul.chem.nutrients, aes(x = depth, y = tn_ug, color = lakename)) + 
   geom_point() + 
+  labs(x= "Depth (m)", y = expression(TN ~ (mu*g/L)), color = "")+
+  #scale_color_brewer(palete = "Dark 2")
+  scale_color_manual(values = c("darkblue", "red"))+
   geom_smooth(method = "lm", se = FALSE) +
   xlim(0, 10)
 print(TNplot)
-
-# Make the graph attractive
+#need to put a line of best fit in manually with this specific test
 ```
 
 ## HIERARCHICAL MODELS
@@ -87,6 +91,7 @@ NTL.summertemp <-
   filter(daynum > 181 & daynum < 213 & depth == 0 ) %>%
   #code won't work if there are NAs
   na.exclude()
+#use space as our indenpendent variables. We are interested how lakes in the general area have responded to climate change and use the variablity across the models to portray that.
 
 NTLtemps <-
 ggplot(NTL.summertemp, aes(x = sampledate, y = temperature_C, color = lakename)) +
@@ -99,26 +104,27 @@ Next, we will build a hierarchical model. We will use the package `nlme` for our
 
 
 ```{r}
-TempTest.mixed <- lme(data = NTL.summertemp,
+TempTest.mixed <- lme(data = NTL.summertemp, #lme = lineral mixed effect
                      temperature_C ~ year4, 
-                     random = ~1|lakename)
-summary(TempTest.mixed)
-rsquared(TempTest.mixed)
+                     random = ~1|lakename) #grouped by lakename
+summary(TempTest.mixed) #interested in incorperating the effect into the model
+rsquared(TempTest.mixed) #when adding in lake as a random effect there was a margin of 66 and condition of 11. Not sig enough for us to use this in our model
 
 # Compare the random effects model with the fixed effects model
 TempTest.fixed <- gls(data = NTL.summertemp,
                       temperature_C ~ year4)
-summary(TempTest.fixed)
+summary(TempTest.fixed) 
 
-anova(TempTest.mixed, TempTest.fixed)
+anova(TempTest.mixed, TempTest.fixed) #testing if there is a sig difference between the models
 # The lower the AIC, the better.
 # The p-value tells us whether those models have a significantly different fit
 
 NTL.tempmodel <-
 ggplot(NTL.summertemp, aes(x = year4, y = temperature_C, color = lakename)) +
-  geom_point() +
+  geom_point(e) +
   scale_color_viridis_d() +
-  geom_abline(intercept = -97.72, slope = 0.06) +
+  #geom_smooth(method = "lm", se = FALSE) this will produce line of best fit from the first model that is not a lineral relationship it is representing the fixed effect model
+  geom_abline(intercept = -97.72, slope = 0.06) + #taken from the model we ran
   # make it look better
   labs(x = "", y = expression("Temperature " ( degree~C)), color = "") +
   theme(legend.spacing.x = unit(0, "cm"))
@@ -127,4 +133,4 @@ print(NTL.tempmodel)
 
 Question: How would you interpret the collective results of your mixed effects model in the context of the study question?
 
-> ANSWER: 
+> ANSWER: Our slope is significant therefore there is a significant change in temperature. We are generally seeing a 0.6 degree celcius change per year from each lake in Wisconsin. It means the lake temp is 1.8 degress F over the course of 30 years. 
