@@ -33,8 +33,8 @@ library(nlme)
 library(piecewiseSEM)
 options(scipen = 4) 
 
-NTL_LTER_ChemistryPhysics_Raw <- read_csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
-NTL_LTER_ChemistryPhysics_Processed <- read_csv("Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv")
+NTL_LTER_Chem_Raw <- read_csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
+NTL_LTER_Litter<- read_csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 #2
 mytheme <- theme_classic(base_size = 14) +
@@ -58,21 +58,17 @@ Research question: What is the best set of predictors for lake temperatures in J
 ```{r}
 #3
 NTL.July <- 
-  NTL_LTER_ChemistryPhysics_Raw %>%
-  select(lakename:temperature_C: year4 : daynum : depth) %>%
+  NTL_LTER_Lake_ChemistryPhysics_Raw %>%
+  select(lakename, temperature_C: year4 : daynum : depth) %>%
   filter(daynum > 182 & daynum < 213) %>% #182 to 213 for daynum of July
   na.exclude()
 
 #4
-NTL.July.AIC <- NTL.July %>% #create a new dataframe
-  filter(lakename == "Paul Lake") %>% #
-  na.omit()
 
-NTLAIC <- lm(data = NTL.July.AIC, year4 ~ daynum + depth) 
-step(TPAIC) 
+NTLAIC <- lm(data = NTL.July.AIC, temperature_C~ year4 + daynum + depth) 
+step(NTLAIC) 
 
 NTLmodel <- lm(data = NTL.July.AIC, tp_ug ~ dissolvedOxygen + temperature_C + tn_ug)
-#lineral model is created and come up with different formulation of the model to tell us which might be better- this is the best model recommended for us to run produced by AIC
 summary(TPmodel) #summary of the model
 ```
 
@@ -83,21 +79,13 @@ summary(TPmodel) #summary of the model
 6. Run an interaction effects ANCOVA to predict temperature based on depth and lakename from the same wrangled dataset.
 
 ```{r}
+
 #6
-NTL.anova.2way <- aov(data = NTLmodel, temperature_C ~ depth * lakename) 
-summary(NTL.anova.2way) #sig difference between lake name and month and we want to inperpret interaction 
+NTL.ancova.main <- lm(data = NTLmodel, temperature_C ~ depth*lakename)
+summary(NTL.ancova.main) 
 
-# Format as lm
-NTL.anova.2way2 <- lm(data = NTLmodel, temperature_C ~ depth * lakename)
-summary(NTL.anova.2way2)
-
-TukeyHSD(NTL.anova.2way)
-
-NTL_interaction.july <-with(NTLmodel, interaction(depth, lakename))
-NTL.interaction.anova <- aov(data = NTLmodel, temperature_C ~ NTL_interaction.july)
-
-NTL_interaction_groups <-HSD.test(TP.interaction.anova, "NTL_interaction.july", group = TRUE)
-NTL_interaction_groups
+NTL.ancova.interaction <- lm(data = NTLmodel, temperature_C ~ depth*lakename)
+summary(NTL.ancova.interaction)
 
 ```
 
@@ -108,8 +96,15 @@ NTL_interaction_groups
 8. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
 
 ```{r}
-#8
-
+#8 - what is the data here
+ANCOVAplot <- ggplot(NTL.July, aes(x = temperature_C, y = depth, color = lakename)) + 
+  geom_point() + 
+  labs(x= "Temperature (C)", y = "Depth (m)", color = "")+
+  #scale_color_brewer(palete = "Dark 2")
+  #scale_color_manual(values = c("darkblue", "red"))+
+  geom_smooth(method = "lm", se = FALSE) +
+  xlim(0, 35)
+print(ANCOVAplot)
 ```
 
 9. Run a mixed effects model to predict dry mass of litter. We already know that nlcdClass and functionalGroup have a significant interaction, so we will specify those two variables as fixed effects with an interaction. We also know that litter mass varies across plot ID, but we are less interested in the actual effect of the plot itself but rather in accounting for the variance among plots. Plot ID will be our random effect.
@@ -118,8 +113,11 @@ a. Build and run a mixed effects model.
 b. Check the difference between the marginal and conditional R2 of the model. 
 
 ```{r}
-
-
+litter_mixed_random <- lme(data = NTL_LTER_Litter,
+                           dryMass ~ nlcdClass * functionalGroup,
+                           random = ~1 | plotID)
+summary(litter_mixed_random)
+rsquared(litter_mixed_random)
 ```
 
 b. continued... How much more variance is explained by adding the random effect to the model? 
@@ -129,8 +127,13 @@ b. continued... How much more variance is explained by adding the random effect 
 c. Run the same model without the random effect.
 d. Run an anova on the two tests. 
 ```{r}
- 
+#c.
+litter_mixed <- lme(data = NTL_LTER_Litter,
+                           dryMass ~ nlcdClass * functionalGroup)
+summary(litter_mixed)
+rsquared(litter_mixed)
 
+#d.
 ```
 
 d. continued... Is the mixed effects model a better model than the fixed effects model? How do you know?
