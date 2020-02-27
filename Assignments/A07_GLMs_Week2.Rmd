@@ -32,7 +32,6 @@ library(tidyverse)
 library(nlme)
 library(piecewiseSEM)
 
-
 NTL_LTER_Chem_Raw <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
 NTL_LTER_Litter<- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
@@ -64,7 +63,6 @@ NTL.July <-
   na.exclude()
 
 #4
-
 NTLAIC <- lm(data = NTL.July, temperature_C~ year4 + daynum + depth) 
 step(NTLAIC) 
 
@@ -74,7 +72,7 @@ summary(NTLmodel)
 
 5. What is the final set of explanatory variables that predict temperature from your multiple regression? How much of the observed variance does this model explain?
 
-> Answer: 
+> Answer: The analysis from the multiple regression shows there is a signficant correlation between temperature, day, and depth (P < 0.0001). There is a strong linear relationship between the independent varbles and the dependant variables showing that 74% of the observed variance is explained in the model (multiple R-squared = 0.7415).
 
 6. Run an interaction effects ANCOVA to predict temperature based on depth and lakename from the same wrangled dataset.
 
@@ -91,18 +89,18 @@ summary(NTL.ancova.interaction)
 
 7. Is there a significant interaction between depth and lakename? How much variance in the temperature observations does this explain?
 
-> Answer: 
+> Answer: There is a significant interaction between depth and many of the lakes (P < 0.0001). Around 78% of the variance is explained in the model (Multiple R-squared = 0.7867).
 
 8. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
 
 ```{r}
 #8 - 
-ANCOVAplot <- ggplot(NTL.July, aes(x = temperature_C, y = depth, color = lakename)) + 
-  geom_point() + 
-  labs(x= "Temperature (C)", y = "Depth (m)", color = "")+
-  #scale_color_brewer(palete = "Dark 2")
+ANCOVAplot <- ggplot(NTL.July, aes(x = depth, y = temperature_C, color = lakename)) + 
+  geom_point(alpha= 0.5) + 
+  scale_color_viridis_d()+
+  labs(x= "Depth (m)", y = expression('Temperature ('*~degree*C*')'), color = "")+
   geom_smooth(method = "lm", se = FALSE) +
-  xlim(0, 35)
+  ylim(0, 35)
 print(ANCOVAplot)
 ```
 
@@ -127,14 +125,14 @@ c. Run the same model without the random effect.
 d. Run an anova on the two tests. 
 ```{r}
 #c.
-litter_mixed <- lme(data = NTL_LTER_Litter,
-                           dryMass ~ nlcdClass * functionalGroup)
+litter_mixed <- lm(data = NTL_LTER_Litter, dryMass ~ nlcdClass * functionalGroup)
 summary(litter_mixed)
 rsquared(litter_mixed)
 
 #d.
+anova(litter_mixed_random, litter_mixed)
 ```
 
 d. continued... Is the mixed effects model a better model than the fixed effects model? How do you know?
 
-> Answer: 
+> Answer: I believe that the mixed random effects model is better than the fixed effect model through comparing the linear relationships. The R-squared value for the model without random effect is 0.2516, while the R-squared value for the random effect model in 0.24.
