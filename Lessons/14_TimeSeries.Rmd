@@ -187,11 +187,11 @@ In general, detecting a monotonic trend requires a long sequence of data with fe
 
 Adjusting the data may be necessary to fulfill the assumptions of a trend test. These adjustments include **aggregation**, **subsampling**, and **interpolation**. What do each of these mean, and why might we want to use them?
 
-> aggregation: 
+> aggregation: Splits the data into subsets, computes summary statistics for each, and returns the result in a convenient form.
 
-> subsampling: 
+> subsampling: Perform subsampling at multiple proportions on a matrix of count data representing mapped reads across multiple samples in many genes. For each sample, perform some statistical operations. Used the least but can be very useful in certain situations.
 
-> interpolation: 
+> interpolation: For a given set of x values, this function will return the corresponding interpolated values. Helping to fill in gaps in data to generate an equal distribution based on your own data. (Like in GIS)
 
 Common interpolation methods: 
 
@@ -227,11 +227,11 @@ ggplot(NCAir.Garinger, aes(x = Date, y = Ozone)) +
   geom_point() 
 print(GaringerOzone)
 
-# na.approx function fills in NAs with a linear interpolation
-# Spline interpolation can also be specified as an alternative
-# Piecewise constant interpolation can be done with na.aggregate
+# na.approx function fills in NAs with a linear interpolation (another option)
+# Spline interpolation can also be specified as an alternative (another option)
+# Piecewise constant interpolation can be done with na.aggregate (another option)
 NCAir.Garinger$Ozone <- na.approx(NCAir.Garinger$Ozone)
-NCAir.Garinger$PM2.5 <- na.approx(NCAir.Garinger$PM2.5)
+NCAir.Garinger$PM2.5 <- na.approx(NCAir.Garinger$PM2.5) #to fill in NAs for Ozone and PM2.5 columns, but had to do it seperately 
 
 GaringerOzone.interpolated <-
 ggplot(NCAir.Garinger, aes(x = Date, y = Ozone)) +
@@ -266,21 +266,21 @@ EnoDischarge.late.monthly <- EnoDischarge.late %>%
          Month = month(datetime)) %>%
   group_by(Year, Month) %>%
   summarise(Discharge = mean(discharge.mean)) 
-  
+#need to wrangle data to use aggregate data by month and get one value by aggregation
 EnoDischarge.late.monthly$Date <- as.Date(paste(EnoDischarge.late.monthly$Year, 
                                                 EnoDischarge.late.monthly$Month, 
                                                 1, sep="-"), 
-                                          format = "%Y-%m-%d")
+                                          format = "%Y-%m-%d") #one discharge measurement per month for 35 years, but we want a date to graph things for the first of the month. Create a new column for date monthly$Date, then create a date, use the year and month and take the first day of the year in the format of year-month-day
 
 # Generate time series (smk.test needs ts, not data.frame)
 EnoDischarge.late.monthly.ts <- ts(EnoDischarge.late.monthly$Discharge, frequency = 12, 
                         start = c(1985, 10, 1), end = c(2019, 12, 1))
-# Run SMK test
+# Run Seasonal Mann-Kendall test
 EnoDischarge.late.trend <- smk.test(EnoDischarge.late.monthly.ts)
 
 # Inspect results
 EnoDischarge.late.trend
-summary(EnoDischarge.late.trend)
+summary(EnoDischarge.late.trend) #null hypothesis is not a trend overtime and the p value is high and a z score close to 0 meaning we cannot discern a specific trend acrossour data set. Z score of  -.96 or more negative or positive .96or higher is significant
 
 EnoDischarge.monthly <-
 ggplot(EnoDischarge.late.monthly, aes(x = Date, y = Discharge)) +
@@ -291,7 +291,7 @@ print(EnoDischarge.monthly)
 
 What would we conclude based on these findings? 
 
->
+> There is no significant trend across our data set for discharge over 35 years. There is a lot of variablity over time, but no major trends within the Eno River.
  
 If a significant trend was present, we could compute a **Sen's Slope** to quantify that trend (`sens.slope` function in the trend package).
 
