@@ -291,7 +291,7 @@ print(EnoDischarge.monthly)
 
 What would we conclude based on these findings? 
 
-> There is no significant trend across our data set for discharge over 35 years. There is a lot of variablity over time, but no major trends within the Eno River.
+> There is no significant trend across the seasons in our data set for discharge over 35 years. There is a lot of variablity over time, but no major trends within the Eno River (Z = -0.1396, P <0.8889).
  
 If a significant trend was present, we could compute a **Sen's Slope** to quantify that trend (`sens.slope` function in the trend package).
 
