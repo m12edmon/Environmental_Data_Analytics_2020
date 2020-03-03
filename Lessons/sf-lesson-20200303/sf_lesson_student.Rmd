@@ -61,7 +61,7 @@ pdf(here("outputs", "pdf_test.pdf"), width = 11, height = 8.5)
 ggplot(data = cars) +
   geom_point(aes(x = dist, y = speed))
 dev.off()
-# it's ok to get a "null device" warning here
+# it's ok to get a "null device" warning here. Here we tested to see if the PDF works. It take awhile for it to show up in the plots pane so it is easier to save it as a PDF and look at it there.
 ```
 
 Look in your your outputs folder. You should have a file called "pdf_test.pdf" that you can open up and looks ok. If not, you'll need to ask for help.
@@ -219,7 +219,7 @@ Most provide one or more of the following:
 
 Some suggested websites:
 
-1. [https://epsg.io/](http://www.epsg-registry.org/) - open source nicer user interface to access data in the EPSG registry, includes a little transformation calculator too! and proj4 string generator, this is my go-to CRS look-up database
+1. [https://epsg.io/](http://www.epsg-registry.org/) - open source nicer user interface to access data in the EPSG registry, includes a little transformation calculator too! and proj4 string generator, this is my go-to CRS look-up database ***kateri preferred
 2. [https://spatialreference.org/ref/epsg/](https://spatialreference.org/ref/epsg/)
 3. [http://www.epsg-registry.org/](http://www.epsg-registry.org/) - official database, but ugly slow interface
 
@@ -279,9 +279,9 @@ I like to always save a copy of the raw data in my R session and rename all new 
 
 ```{r activity.load.data}
 # add your code here
-gages_raw <- 
-southeast_state_bounds_raw <- 
-my_tabular_data_raw <- 
+gages_raw <- st_read(here("data", "spatial_data", "gagesII_9322_sept30_2011.shp"))
+southeast_state_bounds_raw <- st_read(here("data", "spatial_data", "southeast_state_bounds.shp"))
+my_tabular_data_raw <- read.csv(here("data", "tabular_data", "conterm_climate.txt"))
 
 # red warning text is telling you how the data is being parsed
 ```
@@ -304,8 +304,14 @@ Use base R commands to answer the following questions (for basins_nf_seplains_ra
 ```{r activity.check.out.data}
 
 # add your code here
-
+class (basins_nf_seplains_raw)
+rownames(basins_nf_seplains_raw)
+colnames(basins_nf_seplains_raw)
+summary(basins_nf_seplains_raw)
+attributes(basins_nf_seplains_raw)
+ls(basins_nf_seplains_raw)
 # bonus, add your code here
+
 ```
 
 While not in base, you can also use glimpse() from the tibble (tidyverse) package to look at basin_nf_seplains_raw.
@@ -325,7 +331,9 @@ Use st_crs() to look at the CRSs of the spatial data you have loaded up so far. 
 
 ```{r activity.check.out.data.again}
 # add your code here
-
+st_crs(basins_nf_seplains_raw)
+st_crs(gages_raw)
+st_crs(southeast_state_bounds_raw)
 # first two will not have EPSG code but have proj4 string (i.e., "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
 
 # last one will have EPSG code 5070 and proj4 string (i.e., "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"), this one looks good!
@@ -371,10 +379,17 @@ Last, check the CRSs of each.
 ```{r activity.setting.projecting}
 # define proj4 string and EPSG code
 # add your code here
-my_proj4 <- 
-my_epsg <- 
+my_proj4 <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+my_epsg <- 5070
 
 # setting projections
+st_crs(basins_nf_seplains_raw) <- my_proj4
+st_crs(basins_nf_seplains_raw) <- my_epsg
+st_crs(basins_nf_seplains_raw)
+
+st_crs(gages_raw) <- my_proj4
+st_crs(gages_raw) <- my_epsg
+st_crs(gages_raw)
 # set the proj4 string first and then set the EPSG code (because proj4 will over-ride EPSG if you set EPSG first)
 # add your code here
 # basins
@@ -435,7 +450,7 @@ names(gages_tabular)
 # LAT_GAGE is y value and LNG_GAGE is x value
 
 # convert to sf object
-gages_tabular_as_sf <- st_as_sf(gages_tabular, coords = c("LNG_GAGE", "LAT_GAGE"), crs = 4326, dim = "XY") # lat long so set CRS = WGS84
+gages_tabular_as_sf <- st_as_sf(gages_tabular, coords = c("LNG_GAGE", "LAT_GAGE"), crs = 4326, dim = "XY") # lat long so set CRS = WGS84 take our gages tabular data, set the corrdinates, and 
 
 # check class and CRS
 class(gages_tabular_as_sf)
@@ -473,14 +488,14 @@ In some cases, we might not necessarily need the tabular data associated with a 
 ```{r isolating.geometry}
 # tabular data is attached
 head(southeast_state_bounds)
-southeast_state_bounds_geometry <- st_geometry(southeast_state_bounds)
+southeast_state_bounds_geometry <- st_geometry(southeast_state_bounds) #grabs just geometry
 
 # tabular data is dropped
 head(southeast_state_bounds_geometry)
 
 # notice the class is different now
 class(southeast_state_bounds_geometry)
-# it's an sfc class, specifically an sfc_MULTIPOLYGON class
+# it's an sfc class, specifically an sfc_MULTIPOLYGON class no longer a dataframe
 ```
 
 In other cases, you might just want to keep the tabular data (attributes) associated with spatial data. To remove geometry you can use the st_drop_geometry() command.
