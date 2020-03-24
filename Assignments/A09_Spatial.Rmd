@@ -1,6 +1,6 @@
 ---
 title: "Assignment 9: Spatial Analysis"
-author: "Student Name"
+author: "Masha Edmondson"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -15,7 +15,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on spatial
 1. Use this document to create code for a map. You will **NOT** be turning in the knitted Rmd file this time, only the pdf output for a map.
 2. When you have produced your output, submit **only** the pdf file for the map, without any code. Please name your file "StudentName_A09_Spatial.pdf".
 
-The completed exercise is due on Thursday, March 19 at 1:00 pm.
+The completed exercise is due on Thursday, March 24 at 1:00 pm.
 
 ## Create a map
 
@@ -24,7 +24,65 @@ You have three options for this assignment, and you will turn in just **one** fi
 Here are your three options: 
 
 1. Reproduce figure 1b from the spatial lesson, found in section 3.2.2. You may choose a state other than North Carolina, but your map should still contain the spatial features contained in figure 1b in the "img" folder. 
+```{r check.R.version}
+version$version.string
+getwd()
 
+#load packages
+library("readr")
+library("dplyr")
+library("tidyr")
+library("ggplot2")
+library("purrr")
+library("sf")
+library("ggmap")
+library("here")
+
+here("lessons", "sf-lesson-20200303")
+
+#loading in the data
+basins_nf_seplains_raw <- st_read(here("lessons", "sf-lesson-20200303","data", "spatial_data", "bas_nonref_SEPlains.shp"))
+gages_raw <- st_read(here("lessons", "sf-lesson-20200303", "data", "spatial_data", "gagesII_9322_sept30_2011.shp"))
+southeast_state_bounds_raw <- st_read(here("lessons", "sf-lesson-20200303", "data", "spatial_data", "southeast_state_bounds.shp"))
+my_tabular_data_raw <- read.csv(here("lessons", "sf-lesson-20200303", "data", "tabular_data", "conterm_climate.txt"))
+
+#checking CRS
+st_crs(basins_nf_seplains_raw)
+st_crs(gages_raw)
+st_crs(southeast_state_bounds_raw)
+
+# select a state, here I'm choosing South Carolina (SC)
+# add your code here
+sc_state_bounds_geom <- southeast_state_bounds %>%
+  filter(NAME == "South Carolina") %>%
+  st_geometry()
+
+# check
+head(sc_state_bounds_geom)
+
+# select watersheds that intersect with NC bounds
+# add your code here
+sc_basins_nf_seplains <- basins_nf_seplains %>%
+  st_intersection(sc_state_bounds_geom)
+
+# check
+# add your code here
+head(sc_basins_nf_seplains)
+
+# select gages that fall within NC bounds
+# add your code here
+sc_gages <- gages %>%
+  st_intersection(sc_state_bounds_geom)
+
+# bonus
+# add your code here
+sc_area <- st_area(sc_state_bounds_geom) # find the area of SC
+sc_centroid <- st_centroid(sc_state_bounds_geom) # find the centroid of the SC
+sc_gages_buffer_100m <- st_buffer(sc_gages, dist = 100) # make a buffer around the stream gages in SC
+not_nc_gages <- st_difference(gages, sc_state_bounds_geom) # find stream gages not in NC
+
+
+```
 2. Create a new map that mixes spatial and tabular data, as in section 3.3 of the spatial lesson. You may use the maps created in the lesson as an example, but your map should contain data other than precipitation days per year. This map should include: 
 
 * State boundary layer
