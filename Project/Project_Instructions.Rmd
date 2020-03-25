@@ -2,7 +2,9 @@
 title: "Project Instructions"
 author: "Environmental Data Analytics | Kateri Salk"
 date: "Spring 2019"
-output: pdf_document
+output:
+  word_document: default
+  pdf_document: default
 geometry: margin=2.54cm
 ---
 

@@ -556,37 +556,37 @@ Use your knowledge of sf and the tidyverse to select a single state from southea
 Bonus: What are some other spatial operations (or confirmations) that you could carry out with the three spatial datasets?
 
 ```{r activity.gages.select}
-# select a state, here I'm choosing North Carolina (NC)
+# select a state, here I'm choosing Sorth Carolina (SC)
 # add your code here
-nc_state_bounds_geom <- southeast_state_bounds %>%
-  filter(NAME == "North Carolina") %>%
+sc_state_bounds_geom <- southeast_state_bounds %>%
+  filter(NAME == "Sorth Carolina") %>%
   st_geometry()
   # if I wanted Florida instead, what would I need to do?
 
 # check
 # add your code here
-head(nc_state_bounds_geom)
+head(sc_state_bounds_geom)
 
 # select watersheds that intersect with NC bounds
 # add your code here
-nc_basins_nf_seplains <- basins_nf_seplains %>%
-  st_intersection(nc_state_bounds_geom)
+sc_basins_nf_seplains <- basins_nf_seplains %>%
+  st_intersection(sc_state_bounds_geom)
 
 # check
 # add your code here
-head(nc_basins_nf_seplains)
+head(sc_basins_nf_seplains)
 
 # select gages that fall within NC bounds
 # add your code here
-nc_gages <- gages %>%
-  st_intersection(nc_state_bounds_geom)
+sc_gages <- gages %>%
+  st_intersection(sc_state_bounds_geom)
 
 # bonus
 # add your code here
-nc_area <- st_area(nc_state_bounds_geom) # find the area of NC
-nc_centroid <- st_centroid(nc_state_bounds_geom) # find the centroid of the NC
-nc_gages_buffer_100m <- st_buffer(nc_gages, dist = 100) # make a buffer around the stream gages in NC
-not_nc_gages <- st_difference(gages, nc_state_bounds_geom) # find stream gages not in NC
+sc_area <- st_area(sc_state_bounds_geom) # find the area of NC
+sc_centroid <- st_centroid(sc_state_bounds_geom) # find the centroid of the NC
+sc_gages_buffer_100m <- st_buffer(sc_gages, dist = 100) # make a buffer around the stream gages in NC
+not_sc_gages <- st_difference(gages, sc_state_bounds_geom) # find stream gages not in NC
 ```
 
 It's really helpful to actually plot these results before moving forward with your work. That way you an make sure the sf commands are doing what you expect. We'll talk about plotting next...
@@ -633,9 +633,9 @@ Let's check your operations from the 3.1.2 activity. You are trying for somethin
 # add your code here
 pdf(here("lessons", "sf-lesson-20200303", "outputs", "spatial_operations_test_fig.pdf"), width = 11, height = 8.5)
 ggplot() +
-  geom_sf(data = nc_state_bounds_geom, fill = NA) +
-  geom_sf(data = nc_basins_nf_seplains, alpha = 0.25) +
-  geom_sf(data = nc_gages, lwd = 1) +
+  geom_sf(data = sc_state_bounds_geom, fill = NA) +
+  geom_sf(data = sc_basins_nf_seplains, alpha = 0.25) +
+  geom_sf(data = sc_gages, lwd = 1) +
   theme_bw()
 dev.off()
 ```
@@ -648,47 +648,47 @@ Basemaps are available to help you give more context to your maps. This is made 
 
 ```{r adding.basemaps}
 # select North Carolina (NC)
-nc_state_bounds_geom <- southeast_state_bounds %>%
-  filter(NAME == "North Carolina") %>%
+sc_state_bounds_geom <- southeast_state_bounds %>%
+  filter(NAME == "South Carolina") %>%
   st_geometry()
 
 # get data bounding box
-nc_bbox <- nc_state_bounds_geom %>%
+sc_bbox <- sc_state_bounds_geom %>%
   st_buffer(dist = 150000) %>% # this value is very arbitrary just wanting to make a large buffer around geometry
   st_transform(4326) %>% # WGS84 (for lat and long)
   st_bbox()
-nc_bbox # check
+sc_bbox # check
 
 # fix bounding box columns so they match what is needed for the ggmap::get_map() function
-nc_bbox_fix <- c(left = nc_bbox[[1]], bottom = nc_bbox[[2]], right = nc_bbox[[3]], top = nc_bbox[[4]])
+sc_bbox_fix <- c(left = nc_bbox[[1]], bottom = nc_bbox[[2]], right = nc_bbox[[3]], top = nc_bbox[[4]])
 
 # check result
-nc_bbox_fix
+sc_bbox_fix
 
 # get basemap
-nc_basemap <- get_map(nc_bbox_fix, maptype = 'terrain-background', source = 'stamen', zoom = 8)
-class(nc_basemap)
-st_crs(nc_basemap)
+sc_basemap <- get_map(sc_bbox_fix, maptype = 'terrain-background', source = 'stamen', zoom = 8)
+class(sc_basemap)
+st_crs(sc_basemap)
 # you'll have to trust me that this will have a CRS = WGS84
 
 # convert nc_state_bounds_geom to WGS84 so it matches nc_basemap
-nc_state_bounds_geom_wsg84 <- nc_state_bounds_geom %>%
+sc_state_bounds_geom_wsg84 <- sc_state_bounds_geom %>%
   st_transform(4326)
 
 # check
-st_crs(nc_state_bounds_geom_wsg84)
+st_crs(sc_state_bounds_geom_wsg84)
 
 # plot without basemap
-pdf(here("lessons", "sf-lesson-20200303", "outputs", "nc_without_basemap.pdf"), width = 11, height = 8.5)
+pdf(here("lessons", "sf-lesson-20200303", "outputs", "sc_without_basemap.pdf"), width = 11, height = 8.5)
 ggplot() +
-  geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 2) +
+  geom_sf(data = sc_state_bounds_geom_wsg84, fill = NA, lwd = 2) +
   theme_bw()
 dev.off()
 
 # plot with basemap
 # windows version?
-pdf(here("lessons", "sf-lesson-20200303", "outputs", "nc_with_basemap.pdf"), width = 11, height = 8.5)
-ggmap(nc_basemap) +
+pdf(here("lessons", "sf-lesson-20200303", "outputs", "sc_with_basemap.pdf"), width = 11, height = 8.5)
+ggmap(sc_basemap) +
   geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE)
 dev.off()
 
@@ -766,20 +766,15 @@ sc_gages_overlap_wgs84 <- sc_gages_overlap_sel %>%
 # plot figure 1b
 # add your code here
 pdf(here("lessons", "sf-lesson-20200303", "outputs", "figure_SC.pdf"), width = 11, height = 8.5)
-ggmap(nc_basemap) +
+ggmap(sc_basemap) +
   geom_sf(data = sc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE) +
   geom_sf(data = sc_basins_overlap_sel, alpha = 0.25, lwd = 0.5, color = "black", inherit.aes = FALSE) +
   geom_sf(data = sc_gages_overlap_sel, size = 1, inherit.aes = FALSE) +
   theme_bw()+
   labs(x = "Longitude", y = "Latitude") +
    ggtitle("Map of South Carolina's Overlapping Watersheds and Stream Gages")
-#ggplot() +
-  #geom_sf(data = nc_state_bounds_geom, fill = NA, lwd = 1) +
-  #geom_sf(data = nc_basins_overlap_sel, alpha = 0.25, lwd = 0.5, color = "black") +
-  #geom_sf(data = nc_gages_overlap_sel, size = 1) +
-  #theme_bw()
 dev.off()
-#show the latitute from 38 to 31 degrees N
+
 ```
 
 ### 3.3 Mixing Spatial and Tabular Data
