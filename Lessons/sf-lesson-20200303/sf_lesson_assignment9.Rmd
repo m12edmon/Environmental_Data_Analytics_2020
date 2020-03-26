@@ -660,7 +660,7 @@ sc_bbox <- sc_state_bounds_geom %>%
 sc_bbox # check
 
 # fix bounding box columns so they match what is needed for the ggmap::get_map() function
-sc_bbox_fix <- c(left = nc_bbox[[1]], bottom = nc_bbox[[2]], right = nc_bbox[[3]], top = nc_bbox[[4]])
+sc_bbox_fix <- c(left = sc_bbox[[1]], bottom = sc_bbox[[2]], right = sc_bbox[[3]], top = sc_bbox[[4]])
 
 # check result
 sc_bbox_fix
