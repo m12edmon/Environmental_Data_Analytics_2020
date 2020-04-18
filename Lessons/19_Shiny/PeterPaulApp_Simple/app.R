@@ -9,7 +9,7 @@ nutrient_data <- nutrient_data %>%
   filter(depth_id > 0) %>%
   select(lakename, sampledate:po4)
 
-#### Define UI ----
+#### Define UI ---- #fits data to the browser window
 ui <- fluidPage(
   titlePanel("Nutrients in Peter Lake and Paul Lake"),
   sidebarLayout(
