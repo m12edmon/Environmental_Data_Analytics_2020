@@ -280,9 +280,13 @@ I like to always save a copy of the raw data in my R session and rename all new 
 
 ```{r activity.load.data}
 # add your code here
-gages_raw <- st_read(here("data", "spatial_data", "gagesII_9322_sept30_2011.shp"))
-southeast_state_bounds_raw <- st_read(here("data", "spatial_data", "southeast_state_bounds.shp"))
-my_tabular_data_raw <- read_csv(here("data", "tabular_data", "conterm_climate.txt")) # I'm choosing climate data here
+#gages_raw <- st_read(here("lessons", "sf-lesson-20200303" , "data", "spatial_data", "gagesII_9322_sept30_2011.shp"))
+#southeast_state_bounds_raw <- st_read(here("lessons", "sf-lesson-20200303" , "data", "spatial_data", "southeast_state_bounds.shp"))
+#my_tabular_data_raw <- read_csv(here("lessons", "sf-lesson-20200303" , "data", "tabular_data", "conterm_climate.txt")) # I'm choosing climate data here
+
+gages_raw <- st_read(here("lessons", "sf-lesson-20200303" , "data", "cafo_data", "Points.shp"))
+swine_raw <- st_read(here("lessons", "sf-lesson-20200303" , "data", "cafo_data", "Swine_CAFO.shp"))
+nc_counties_raw <- read_csv(here("lessons", "sf-lesson-20200303" , "data", "cafo_data", "NC_Counties.shp"))
 
 # red warning text is telling you how the data is being parsed
 ```
@@ -335,7 +339,8 @@ Use st_crs() to look at the CRSs of the spatial data you have loaded up so far. 
 # add your code here
 st_crs(basins_nf_seplains_raw)
 st_crs(gages_raw)
-st_crs(southeast_state_bounds_raw)
+st_crs(nc_counties_raw)
+st_crs(swine_raw)
 
 # first two will not have EPSG code but have proj4 string (i.e., "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
 
@@ -395,6 +400,7 @@ basins_nf_seplains <- basins_nf_seplains %>%
   st_set_crs(my_epsg)
 st_crs(basins_nf_seplains)
 
+
 # add your code here
 # gages
 gages <- gages_raw
@@ -403,29 +409,36 @@ gages <- gages %>%
   st_set_crs(my_epsg)
 st_crs(gages)
 
-# state bounds
+# county bounds
 # this one looks good so you don't need to do anything but here's the code anyway
 # add your code here
-southeast_state_bounds <- southeast_state_bounds_raw
-st_crs(southeast_state_bounds) <- my_proj4
-southeast_state_bounds <- southeast_state_bounds %>%
+nc_counties <- nc_counties_raw
+st_crs(nc_counties) <- my_proj4
+nc_counties <- nc_counties %>%
   st_set_crs(my_epsg)
-st_crs(southeast_state_bounds)
+st_crs(nc_counties)
+
+#swine locations
+swine <- swine_raw
+st_crs(swine) <- my_proj4
+swine <- swine %>%
+  st_set_crs(my_epsg)
+st_crs(swine)
 
 # projecting to North America Albers Equal Area Conic
 # add your code here
 na_albers_proj4 <- "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"
 na_albers_epsg <- 102008
 # set the proj4 string first and then set the EPSG code (because proj4 will over-ride EPSG if you set EPSG first)
-southeast_state_bounds_na_albers <-  sf::st_transform(southeast_state_bounds, crs = na_albers_proj4) %>%
+nc_state_county_na_albers <-  sf::st_transform(nc_counties, crs = na_albers_proj4) %>%
   st_set_crs(na_albers_epsg)
 
 # check CRSs
 # add your code here
 st_crs(basins_nf_seplains)
 st_crs(gages)
-st_crs(southeast_state_bounds)
-st_crs(southeast_state_bounds_na_albers)
+st_crs(swine)
+st_crs(nc_counties)
 # first three should be the same!
 ```
 
@@ -502,14 +515,14 @@ In some cases, we might not necessarily need the tabular data associated with a 
 
 ```{r isolating.geometry}
 # tabular data is attached
-head(southeast_state_bounds)
-southeast_state_bounds_geometry <- st_geometry(southeast_state_bounds)
+head(nc_counties)
+nc_county_geometry <- st_geometry(nc_counties)
 
 # tabular data is dropped
-head(southeast_state_bounds_geometry)
+head(nc_county_geometry)
 
 # notice the class is different now
-class(southeast_state_bounds_geometry)
+class(nc_county_geometry)
 # it's an sfc class, specifically an sfc_MULTIPOLYGON class
 ```
 
@@ -674,11 +687,19 @@ st_crs(nc_basemap)
 nc_state_bounds_geom_wsg84 <- nc_state_bounds_geom %>%
   st_transform(4326)
 
+# convert gages to WGS84 so it matches nc_basemap
+nc_gages <- gages%>%
+  st_transform(4326)
+st_crs(nc_gages)
+
+swine_nc <- swine%>%
+  st_transform(4326)
+
 # check
 st_crs(nc_state_bounds_geom_wsg84)
 
 # plot without basemap
-pdf(here("outputs", "nc_without_basemap.pdf"), width = 11, height = 8.5)
+pdf(here("lessons", "sf-lesson-20200303", "outputs", "nc_without_basemap.pdf"), width = 11, height = 8.5)
 ggplot() +
   geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 2) +
   theme_bw()
@@ -686,9 +707,11 @@ dev.off()
 
 # plot with basemap
 # windows version?
-pdf(here("outputs", "nc_with_basemap.pdf"), width = 11, height = 8.5)
+pdf(here("lessons", "sf-lesson-20200303", "outputs", "nc_with_basemap.pdf"), width = 11, height = 8.5)
 ggmap(nc_basemap) +
-  geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE)
+  geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE)+
+  geom_sf(data = nc_gages,size = 1, inherit.aes = FALSE)+
+  geom_sf(data= swine_nc, size=1, color = "pink", inherit.aes = FALSE)
 dev.off()
 
 # bonus
@@ -696,18 +719,18 @@ dev.off()
 # look at the help menu for more information on the zoom range
 ```
 
-**Activity**
 
+**Activity**
 Can you reproduce Figure 1b?
 
 ```{r activity.reproducing.figure1b}
 # select NC
 # add your code here
-nc_state_bounds_geom <- southeast_state_bounds %>%
+nc_state_bounds_geom <- nc_state_bounds_geom_wsg84 %>%
   filter(NAME == "North Carolina") %>%
   st_geometry()
 
-# make figure 1b
+# make figure
 # find watersheds that overlap with NC (want the whole watershed, not just the part of the watershe that's inside the NC bounds)
 # add your code here
 nc_basins_overlap_binary <- basins_nf_seplains %>%
@@ -751,17 +774,27 @@ nc_basins_overlap_sel <- basins_nf_seplains[nc_basins_overlap_logic, ]
 class(nc_basins_overlap_sel)
 # sf object
 
-# select Southeast gages only
+# select gages only
 # add your code here
-southeast_gages <- gages %>%
-  st_intersection(southeast_state_bounds_geometry)
+nc_gages <- gages %>%
+  st_intersection(nc_state_bounds_geom)
 # stretch break...this might take a while to run
 
 # use nc_basins_overlap_sel to find gages inside
 # add your code here
-nc_gages_overlap_sel <- southeast_gages %>%
+nc_gages_overlap_sel <- gages %>%
   st_intersection(nc_basins_overlap_sel)
 # stretch break...this might take a while to run
+
+nc_swine <- swine%>%
+  st_intersection(nc_state_bounds_geom)
+nc_swine_overlap <- swine%>%
+  st_intersection(nc_basins_overlap_sel)
+
+nc_counties_f <- nc_counties%>%
+  st_interection(nc_state_bounds_geom)
+nc_counties_overlap <-nc_counties%>%
+  st_intersection(nc_basins_overlap_sel)
 
 # convert all to WGS84
 # add your code here
@@ -771,14 +804,20 @@ nc_basins_overlap_wgs84 <- nc_basins_overlap_sel %>%
   st_transform(4326)
 nc_gages_overlap_wgs84 <- nc_gages_overlap_sel %>%
   st_transform(4326)
+nc_swine_overlap_wgs84 <- nc_swine_overlap %>%
+  st_transform(4326)
+nc_counties_overlap_wgs84 <- nc_counties_overlap%>%
+  st_transform(4326)
 
 # plot figure 1b
 # add your code here
-pdf(here("outputs", "figure_1b.pdf"), width = 11, height = 8.5)
+pdf(here("lessons", "sf-lesson-20200303", "outputs", "swine.pdf"), width = 11, height = 8.5)
 ggmap(nc_basemap) +
   geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE) +
   geom_sf(data = nc_basins_overlap_sel, alpha = 0.25, lwd = 0.5, color = "black", inherit.aes = FALSE) +
-  geom_sf(data = nc_gages_overlap_sel, size = 1, inherit.aes = FALSE) +
+  geom_sf(data = nc_gages, size = 1, inherit.aes = FALSE) +
+  geom_sf(data= nc_swine, size = 1, color = "pink", inherit.aes = FALSE)+
+  geom_sf(data= nc_counties_f, alpha = 0.25, color = "grey", inherit.aes = FALSE)+
   theme_bw()
 # ggplot() +
 #   geom_sf(data = nc_state_bounds_geom, fill = NA, lwd = 1) +
