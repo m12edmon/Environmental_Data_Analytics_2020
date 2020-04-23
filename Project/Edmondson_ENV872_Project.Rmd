@@ -1,0 +1,103 @@
+---
+output: 
+  pdf_document:
+    keep_tex: yes
+    fig_caption: yes
+    number_sections: yes
+geometry: margin=2.54cm
+title: "Analyzing Fecal Coliform Concentrations within Surface Waters of North Carolina"
+subtitle: "https://github.com/m12edmon/FinalProject.git"
+author: "Masha Edmondson"
+fontsize: 12pt
+mainfont: Times New Roman
+
+---
+
+\newpage
+\tableofcontents 
+\newpage
+\listoftables 
+\newpage
+\listoffigures 
+\newpage
+
+```{r setup, include=FALSE}
+# Set your working directory
+
+# Load your packages
+
+# Set your ggplot theme
+
+# Load your datasets
+
+```
+
+
+## 1. Rationale and Research Questions
+
+North Carolina is a national leader in livestock production, and is the nation’s second leading producer of hogs. The vast majority of livestock are grown on concentrated animal feeding operations (“CAFOs”) designed to maximize production efficiency by raising as many animals as possible, as quickly as possible. Though CAFOs have resulted in massive expansion and record profits in the livestock industry, they present significant waste management challenges. CAFOs have been demonstrated to adversely affect ground and surface water quality. The produced livestock waste can contaminate surface and groundwater sources by seeping into the soil from waste storage lagoons, through runoff from land application sites, or during significant rainfall and storm events. Harmful nutrients such as nitrogen, phosphorus, and fecal matter can be deposited into waterways, which poses major threats to the environment and human health. There are few regulations governing how water quality monitoring is conducted in the state. Currently, there is no clear enforcement of water quality regulations for this industry, and several industrial animal feeding operations are not required to test for harmful contaminates annually. Water quality is an integral part of a healthy community and environment, which are important culturally and economically to North Carolina. 
+
+Bacteria indicate the possible presence of pathogenic viruses and protozoans that live in human and animal digestive systems. Therefore, the presence of fecal bacteria in streams suggests that pathogenic microorganisms might also be present and pose a health risk. In addition to the possible health risk associated with the presence of elevated levels of fecal bacteria, this bacteria can also cause unpleasant odors, eutrophication, and harmful algae blooms. Since it is difficult, time-consuming, and expensive to test for the presence of a large variety of pathogens, water is often tested for coliforms and fecal streptococci. Fecal coliforms, a subset of total coliform bacteria, are specifically associated with warm-blooded animals. Fecal coliforms are a more precise way of estimating waste contamination in waterways,  in addition to Escherichia coli (E. coli). Though the EPA recommends no fecal coliform be present in surface waters, it has set a recommendation for fecal coliform criteria not to exceed 200 cfu per 100mL. Exceeding this recommended limit indicates the potential for human infectious disease. 
+
+This study investigates the spatial distribution of Fecal Coliform within surface waters of North Carolina. The analysis focuses on understanding historical fecal coliform concentrations in North Carolina surface waters, and how concentrations may vary in location, proximity to permitted CAFOs, across time, and across discharge rates. Therefore, two research questions are raised: 1) is there a significant correlation between North Carolina counties with industrial farming operations and exceeding fecal coliform concentrations in surface waters, and 2) are there specific year or seasons in which fecal coliform concentrations notably exceed EPA limits. In addition, six counties will serve as case studies to determine if a correlation exists between exceeding concentrations of fecal coliform and proximity to swine CAFOs. This analysis predicts that surface waters located near permitted concentrated animal feeding operations will have high concentrations of fecal coliform in surface waters that exceed the EPA standard limit.  
+\newpage
+
+## 2. Dataset Information
+
+#2.1 Water Quality Portal (WQP)
+The dataset used for this analysis was obtained from the national Water Quality Portal (WQP) at http://www.waterqualitydata.us/portal/. The WQP is a cooperative service sponsored by the United States Geological Survey (USGS), the Environmental Protection Agency (EPA), and the National Water Quality Monitoring Council (NWQMC). The WQP combines physical, chemical and biological water quality data from multiple data sources, across decades, at one location, and creates a dataset. It provides access to 250 million water quality data records collected across 400 federal, state, and tribal agencies and other stakeholders. 
+```{r, include=FALSE}
+kable(table_1, caption = "Table 1: Selections")
+```
+
+#2.2 Scope of Analysis
+For the scope of this analysis, surface water data was collected by WQP from the National Water Information System (NWIS) web interface and the STORET data warehouse for all 100 counties in North Carolina; however, not all counties had recorded sample data. The data was further filtered by a microbiological characteristic group with the specific parameter of fecal coliform (31625) with a 0.7 micron membrane filter (mFC) sample method. Another fecal coliform parameter 31616 occasionally appears in the downloaded dataset. This parameter is identical to 31625 except that it uses a 0.45 micron membrane filter. The use of the 0.45 micron membrane filter is not recommended for fecal coliform analysis, but this method was used extensively in the past. The earliest historical record of this sampled parameter began in January of 1964. In order to ensure a consistent time frame, the analysis considered data collection that began on January 1, 1970 until December 1, 2018. This time frame was selected because 1970 was the first year to have at least one fecal coliform sample recorded each month. This advanced search returned 4,618 water quality monitoring stations observed across 98 counties in North Carolina (Figure 1).
+\newpage
+```{r, include=FALSE}
+# include Figure 1 here that is the PDF of swine locations and data sites
+#Figure 1: Location of all North Carolina Permitted swine concentrated animal feeding operations (CAFOs) in relation to USGS STORET and NWIS water quality data sites.
+```
+\newpage
+
+#2.3 Data-Wrangling Process
+The data from WQP was downloaded in two parts: a csv file of the site information and a csv file of the microbiological sample results. These sites and results datasheets have a common data field, “monitoring location ID”, that was used to join the two datasets together. The initial downloaded dataset contained 73 columns in the raw dataset that was then filtered to 25 columns in the processed dataset (Table 2). Further exploratory analysis for six case studies wrangled the dataset into five columns (Table 3). 
+
+#2.4 Dataset Structure
+The processed dataset contains 25 columns, which are described in Table 2. Further analysis for case studies wrangled the dataset into five columns. 
+```{r, include=FALSE}
+kable(Table_2, caption = "Table 2: Processed dataset content")
+
+kable(table_3, caption = "Table 3: Case study dataset content")
+```
+\newpage
+
+## 3. Exploratory Data Analysis 
+
+#3.1 Exploration of Fecal Coliform Concentrations in relation to N.C. County Data 
+
+Visual data exploration of the recorded samples of fecal coliform are illustrated in Figure 2, ....
+
+#3.2 Exploration of the Proposed Six Case Study Counties 
+
+\newpage
+
+# Analysis
+
+
+
+## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed>
+
+## Question 2: 
+
+
+
+
+\newpage
+
+# Summary and Conclusions
+
+
+\newpage
+
+# References
+<add references here if relevant, otherwise delete this section> 
